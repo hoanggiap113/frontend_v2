@@ -1,0 +1,20 @@
+services:
+  frontend:
+    build:
+      context: .
+    image: cqa-frontend:dev
+    container_name: cqa-frontend-dev
+    ports:
+      - "${PORT:-3000}:3000"
+    environment:
+      NODE_ENV: development
+      VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:8080/api/v1}
+      VITE_DATA_SOURCE: ${VITE_DATA_SOURCE:-api}
+      VITE_WEBHOOK_API_URL: ${VITE_WEBHOOK_API_URL:-}
+    volumes:
+      - .:/app
+      - frontend-node-modules:/app/node_modules
+    command: pnpm exec vite dev --host 0.0.0.0 --port 3000
+
+volumes:
+  frontend-node-modules:

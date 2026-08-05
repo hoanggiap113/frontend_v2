@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0f8f4e" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <title>Chat Quality Agent</title>
+    <script>
+      ;(function () {
+        try {
+          var stored = window.localStorage.getItem('theme')
+          var mode =
+            stored === 'light' || stored === 'dark' || stored === 'auto'
+              ? stored
+              : 'auto'
+          var prefersDark = window.matchMedia(
+            '(prefers-color-scheme: dark)',
+          ).matches
+          var resolved = mode === 'auto' ? (prefersDark ? 'dark' : 'light') : mode
+          var root = document.documentElement
+          root.classList.remove('light', 'dark')
+          root.classList.add(resolved)
+          root.style.colorScheme = resolved
+        } catch (_) {}
+      })()
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
