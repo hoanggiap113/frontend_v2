@@ -18,16 +18,16 @@ import {
   RefreshCw,
   Search,
   User,
-} from '#/shared/ui/icons'
+} from '#/components/ui/icons'
 import { useAppDispatch, useAppSelector } from '#/app/store/hooks'
 import {
   selectAuthUser,
   selectCurrentWorkspace,
   selectGlobalSearch,
 } from '#/app/store/index'
-import { readRefreshToken } from '#/shared/lib/browser-storage'
-import { authService } from '#/features/auth/service'
-import { clearSession } from '#/features/auth/store'
+import { readRefreshToken } from '#/lib/browser-storage'
+import { authService } from '#/lib/services/auth.service'
+import { clearSession } from '#/features/auth'
 import { setGlobalSearch } from '#/app/store/uiSlice'
 
 interface HeaderProps {

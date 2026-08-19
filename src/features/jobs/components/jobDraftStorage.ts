@@ -1,5 +1,5 @@
 import { jobFormSteps } from './jobFormConfig'
-import type { StoredJobDraft } from '../types/job-form'
+import type { StoredJobDraft } from '../../../lib/types/job-form'
 
 export function readJobDraft(storageKey: string): StoredJobDraft | null {
   if (typeof window === 'undefined') return null

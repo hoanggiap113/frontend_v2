@@ -1,12 +1,12 @@
-import { Bot, CalendarClock, Layers3, PlayCircle } from '#/shared/ui/icons'
-import type { AppIcon } from '#/shared/ui/icons'
+import { Bot, CalendarClock, Layers3, PlayCircle } from '#/components/ui/icons'
+import type { AppIcon } from '#/components/ui/icons'
 import {
   formatJobSchedule,
   JOB_STATUS_STYLES,
   JOB_TYPE_LABEL,
-} from '../../lib/job-helper'
-import { formatDateTime } from '#/shared/lib/datetime-helper'
-import type { JobItem, JobRunItem } from '../../types/job'
+} from '../../../../lib/helpers/job-helper'
+import { formatDateTime } from '#/lib/helpers/datetime-helper'
+import type { JobItem, JobRunItem } from '../../../../lib/types/job'
 
 const runStatusLabel: Record<JobItem['lastRunStatus'], string> = {
   failed: 'Lỗi',

@@ -1,6 +1,6 @@
-import { Clock3, FileText, SearchCheck } from '#/shared/ui/icons'
-import { formatDateTime } from '#/shared/lib/datetime-helper'
-import type { JobRunItem } from '../../types/job'
+import { Clock3, FileText, SearchCheck } from '#/components/ui/icons'
+import { formatDateTime } from '#/lib/helpers/datetime-helper'
+import type { JobRunItem } from '../../../../lib/types/job'
 
 export default function JobResultsPanel({
   runs,

@@ -1,17 +1,17 @@
 import type { ReactNode } from 'react'
 import { useForm, type FieldApi } from '@tanstack/react-form'
 import { clsx } from 'clsx'
-import { ExternalLink, Info, X } from '#/shared/ui/icons'
+import { ExternalLink, Info, X } from '#/components/ui/icons'
 import {
   CHANNEL_TYPE_OPTIONS,
   SYNC_INTERVAL_OPTIONS,
-} from '../lib/channel-helper'
-import { rules } from '#/shared/lib/rules'
+} from '../../../lib/helpers/channel-helper'
+import { rules } from '#/lib/rules'
 import type {
   ChannelType,
   ConnectChannelForm,
   SyncInterval,
-} from '../types/channel'
+} from '../../../lib/types/channel'
 
 interface Props {
   initialValues?: ConnectChannelForm

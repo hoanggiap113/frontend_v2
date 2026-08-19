@@ -1,5 +1,5 @@
-import { AdminLayout } from '#/app/layout'
-import { readAccessToken } from '#/shared/lib/browser-storage'
+import { AdminLayout } from '#/app/layout/index'
+import { readAccessToken } from '#/lib/browser-storage'
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_layout')({

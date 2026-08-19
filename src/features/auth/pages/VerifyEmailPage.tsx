@@ -7,9 +7,9 @@ import {
   CheckCircle2,
   ArrowRight,
   RotateCcw,
-} from '#/shared/ui/icons'
-import { AuthBrand, AuthFooter } from '../components/AuthShared'
-import { authService } from '../service/auth.service'
+} from '#/components/ui/icons'
+import { AuthBrand, AuthFooter } from '../AuthShared'
+import { authService } from '../../../lib/services/auth.service'
 
 interface VerifyEmailFields {
   otp: string

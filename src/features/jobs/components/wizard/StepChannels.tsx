@@ -1,8 +1,8 @@
-import { CheckCircle2 } from '#/shared/ui/icons'
+import { CheckCircle2 } from '#/components/ui/icons'
 import { clsx } from 'clsx'
 import { StepDescription } from './JobFormControls'
-import { getChannelTypeLabel } from '#/features/channels'
-import type { JobChannelsStepProps } from '../../types/job-form'
+import { getChannelTypeLabel } from '#/lib/helpers/channel-helper'
+import type { JobChannelsStepProps } from '../../../../lib/types/job-form'
 
 export default function StepChannels({
   channels,

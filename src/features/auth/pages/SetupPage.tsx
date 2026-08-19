@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { useNavigate } from '@tanstack/react-router'
-import { AlertCircle, Lock, Mail, ShieldCheck, User } from '#/shared/ui/icons'
-import { AuthBrand, AuthFooter, FieldWrapper, SubmitButton } from '../components/AuthShared'
-import { authService } from '../service/auth.service'
+import { AlertCircle, Lock, Mail, ShieldCheck, User } from '#/components/ui/icons'
+import { AuthBrand, AuthFooter, FieldWrapper, SubmitButton } from '../AuthShared'
+import { authService } from '../../../lib/services/auth.service'
 import { useAppDispatch } from '#/app/store/hooks'
-import { setSession } from '../store/authSlice'
+import { setSession } from '../authSlice'
 
 export default function SetupPage() {
   const navigate = useNavigate()

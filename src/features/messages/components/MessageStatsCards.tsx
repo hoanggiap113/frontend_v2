@@ -4,13 +4,13 @@ import {
   MessageSquareText,
   Paperclip,
   type AppIcon,
-} from '#/shared/ui/icons'
+} from '#/components/ui/icons'
 import {
   buildBusinessMessageStats,
   type MessageStatIconKey,
   type MessageStatTone,
-} from '../lib/message-stats-helper'
-import type { ConversationItem } from '../types/message'
+} from '../../../lib/helpers/message-stats-helper'
+import type { ConversationItem } from '../../../lib/types/message'
 
 const statToneClass: Record<
   MessageStatTone,

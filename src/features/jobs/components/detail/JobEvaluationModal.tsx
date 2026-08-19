@@ -1,7 +1,7 @@
-import { AlertTriangle, Bot, CheckCircle2, X } from '#/shared/ui/icons'
-import ScrollArea from '#/shared/components/ScrollArea'
-import { formatDateTime } from '#/shared/lib/datetime-helper'
-import type { JobRunItem } from '../../types/job'
+import { AlertTriangle, Bot, CheckCircle2, X } from '#/components/ui/icons'
+import ScrollArea from '#/components/ui/ScrollArea'
+import { formatDateTime } from '#/lib/helpers/datetime-helper'
+import type { JobRunItem } from '../../../../lib/types/job'
 
 interface ParsedRunSummary {
   averageScore?: number

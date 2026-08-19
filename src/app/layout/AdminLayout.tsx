@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import Sidebar from './Sidebar'
 import Header from './Header'
-import { useRouteTitle } from '#/shared/hooks/useRouteTitle'
+import { useRouteTitle } from '#/lib/useRouteTitle'
 import { useAppDispatch, useAppSelector } from '#/app/store/hooks'
 import {
   selectAuthUser,
@@ -10,11 +10,11 @@ import {
   selectCurrentWorkspaceId,
   selectSidebarCollapsed,
 } from '#/app/store/index'
-import { setUser } from '#/features/auth/store'
+import { setUser } from '#/features/auth'
 import { toggleSidebar } from '#/app/store/uiSlice'
-import { setCurrentWorkspaceId, setWorkspaces } from '#/features/workspaces/store'
-import { queryKeys } from '#/shared/service/query-keys'
-import { workspacesService } from '#/features/workspaces/service'
+import { setCurrentWorkspaceId, setWorkspaces } from '#/features/workspaces'
+import { queryKeys } from '#/lib/services/query-keys'
+import { workspacesService } from '#/lib/services/workspaces.service'
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const dispatch = useAppDispatch()

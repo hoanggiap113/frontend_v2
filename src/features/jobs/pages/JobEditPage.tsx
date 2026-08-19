@@ -1,14 +1,14 @@
 import { useEffect } from 'react'
 import { useNavigate } from '@tanstack/react-router'
-import LoadingState from '#/shared/components/LoadingState'
-import PageHeader from '#/shared/components/PageHeader'
-import { useToast } from '#/shared/components/Toast'
+import { Typography } from 'antd'
+import LoadingState from '#/components/ui/LoadingState'
+import { useToast } from '#/app/providers/ToastProvider'
 import JobForm from '../components/JobForm'
-import { getJobErrorMessage } from '../lib/job-error-helper'
+import { getJobErrorMessage } from '../../../lib/helpers/job-error-helper'
 import {
   useJobDetailQuery,
   useUpdateJobMutation,
-} from '../service/jobs.queries'
+} from '../../../lib/hooks/jobs.queries'
 import { selectCurrentWorkspaceId } from '#/app/store/index'
 import { useAppSelector } from '#/app/store/hooks'
 
@@ -44,10 +44,17 @@ export default function JobEditPage({ jobId }: { jobId: string }) {
 
   return (
     <div className="space-y-6 p-6">
-      <PageHeader
-        title={`Chỉnh sửa: ${job.name}`}
-        description="Cập nhật cấu hình, provider, model, quy tắc và lịch chạy của tác vụ AI."
-      />
+      <section className="page-header">
+        <div className="page-header__content">
+          <Typography.Title level={2} className="page-header__title">
+            Chỉnh sửa: {job.name}
+          </Typography.Title>
+          <Typography.Text className="page-header__description">
+            Cập nhật cấu hình, provider, model, quy tắc và lịch chạy của tác vụ
+            AI.
+          </Typography.Text>
+        </div>
+      </section>
       <JobForm
         initialJob={job}
         submitLabel="Cập nhật tác vụ AI"

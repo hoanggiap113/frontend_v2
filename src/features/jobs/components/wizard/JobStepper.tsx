@@ -1,4 +1,4 @@
-import { CheckCircle2 } from '#/shared/ui/icons'
+import { CheckCircle2 } from '#/components/ui/icons'
 import { clsx } from 'clsx'
 import { jobFormSteps } from '../jobFormConfig'
 

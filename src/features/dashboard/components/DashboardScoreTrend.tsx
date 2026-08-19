@@ -9,10 +9,10 @@ import {
   YAxis,
   type TooltipContentProps,
 } from 'recharts'
-import { EmptyState, SectionCard } from '#/shared/ui/index'
-import { Activity, TrendingUp } from '#/shared/ui/icons'
-import { formatDate } from '#/shared/lib/datetime-helper'
-import type { ScoreTrendResponse } from '../types'
+import { EmptyState, SectionCard } from '#/components'
+import { Activity, TrendingUp } from '#/components/ui/icons'
+import { formatDate } from '#/lib/helpers/datetime-helper'
+import type { ScoreTrendResponse } from '../../../lib/types/dashboard'
 
 function CustomTooltip({ active, payload, label }: TooltipContentProps<number, string>) {
   if (!active || !payload?.length) return null

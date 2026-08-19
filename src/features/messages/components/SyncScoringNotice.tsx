@@ -1,4 +1,4 @@
-import { Clock3 } from '#/shared/ui/icons'
+import { Clock3 } from '#/components/ui/icons'
 
 export function SyncScoringNotice() {
   return (

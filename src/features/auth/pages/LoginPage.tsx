@@ -2,19 +2,19 @@ import { useRef, useState } from 'react'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { useForm } from '@tanstack/react-form'
 import type { FieldApi } from '@tanstack/react-form'
-import { Mail, Lock, Eye, EyeOff } from '#/shared/ui/icons'
-import { rules } from '#/shared/lib/rules'
+import { Mail, Lock, Eye, EyeOff } from '#/components/ui/icons'
+import { rules } from '#/lib/rules'
 import {
   AuthBrand,
   AuthFooter,
   FieldWrapper,
   SubmitButton,
-} from '../components/AuthShared'
-import { authService } from '../service/auth.service'
+} from '../AuthShared'
+import { authService } from '../../../lib/services/auth.service'
 import { useAppDispatch } from '#/app/store/hooks'
-import { setSession } from '../store/authSlice'
-import { useToast } from '#/shared/components/Toast'
-import { getAuthErrorFeedback } from '../lib/auth-error-helper'
+import { setSession } from '../authSlice'
+import { useToast } from '#/app/providers/ToastProvider'
+import { getAuthErrorFeedback } from '../../../lib/helpers/auth-error-helper'
 
 interface LoginFields {
   email: string

@@ -1,16 +1,17 @@
 import { chatbotModelOptions } from '#/features/chatbot'
+import { DEFAULT_JOB_BUSINESS_CONTEXT } from '#/constant'
 import type {
   JobItem,
   JobRuleInput,
   JobRuleSeverity,
   JobUpsertPayload,
-} from '../types/job'
+} from '../../../lib/types/job'
 import type {
   JobOutputOption,
   JobScheduleOption,
   JobStatusOption,
   JobTypeOption,
-} from '../types/job-form'
+} from '../../../lib/types/job-form'
 
 export const jobFormSteps = [
   'Chọn loại',
@@ -187,8 +188,7 @@ export const defaultRuleItems: JobRuleInput[] = [
   },
 ]
 
-export const defaultBusinessContext =
-  'Đây là cửa hàng demo, chuyên tư vấn và bán sản phẩm/dịch vụ cho khách hàng qua kênh chat.'
+export const defaultBusinessContext = DEFAULT_JOB_BUSINESS_CONTEXT
 
 export const defaultRules = defaultRuleItems.map(
   (rule) => `${rule.title}: ${rule.content}`,

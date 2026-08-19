@@ -1,4 +1,4 @@
-import { Plus, RotateCcw, Trash2 } from '#/shared/ui/icons'
+import { Plus, RotateCcw, Trash2 } from '#/components/ui/icons'
 import {
   defaultBusinessContext,
   defaultClassificationRules,
@@ -13,8 +13,8 @@ import {
   TextArea,
   TextInput,
 } from './JobFormControls'
-import type { JobRuleInput, JobRuleSeverity } from '../../types/job'
-import type { JobStepBaseProps } from '../../types/job-form'
+import type { JobRuleInput, JobRuleSeverity } from '../../../../lib/types/job'
+import type { JobStepBaseProps } from '../../../../lib/types/job-form'
 
 export default function StepRules({ form, setFormValue }: JobStepBaseProps) {
   function syncRuleSummary(ruleItems: JobRuleInput[]) {

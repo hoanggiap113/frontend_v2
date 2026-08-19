@@ -1,4 +1,4 @@
-import { ChannelDetailPage } from '#/features/channels/pages'
+import ChannelDetailPage from '#/features/channels/ChannelDetailPage'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_layout/channels/$channelId')({

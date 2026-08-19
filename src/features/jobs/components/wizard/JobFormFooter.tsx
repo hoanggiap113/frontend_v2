@@ -1,4 +1,4 @@
-import { ChevronLeft, ChevronRight } from '#/shared/ui/icons'
+import { ChevronLeft, ChevronRight } from '#/components/ui/icons'
 import { jobFormSteps } from '../jobFormConfig'
 
 export default function JobFormFooter({

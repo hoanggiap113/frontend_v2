@@ -1,6 +1,6 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
-import { readAccessToken } from '#/shared/lib/browser-storage'
-import { RegisterPage } from '#/features/auth/pages'
+import { readAccessToken } from '#/lib/browser-storage'
+import RegisterPage from '#/features/auth/pages/RegisterPage'
 
 export const Route = createFileRoute('/register')({
   beforeLoad: () => {
@@ -10,3 +10,4 @@ export const Route = createFileRoute('/register')({
   },
   component: RegisterPage,
 })
+

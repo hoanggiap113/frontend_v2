@@ -1,8 +1,8 @@
 import { Progress, Tag, Typography } from 'antd'
-import { EmptyState, SectionCard } from '#/shared/ui/index'
-import { Award, UserRound } from '#/shared/ui/icons'
-import { formatNumber } from '#/shared/lib/number-helper'
-import type { AgentStatsResponse } from '../types'
+import { EmptyState, SectionCard } from '#/components'
+import { Award, UserRound } from '#/components/ui/icons'
+import { formatNumber } from '#/lib/helpers/number-helper'
+import type { AgentStatsResponse } from '../../../lib/types/dashboard'
 
 function getScoreTone(score: number) {
   if (score >= 8) return { color: '#0f8f4e', label: 'Tốt' }

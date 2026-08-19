@@ -1,9 +1,14 @@
 import { Button, Popconfirm, Tag, Typography } from 'antd'
-import { ArrowRight, Building2, CheckCircle2, Trash2 } from '#/shared/ui/icons'
-import LoadingState from '#/shared/components/LoadingState'
-import { AppCard, EmptyState, SectionCard } from '#/shared/ui/index'
-import { formatDate } from '#/shared/lib/datetime-helper'
-import type { Workspace } from '../types/workspace'
+import {
+  ArrowRight,
+  Building2,
+  CheckCircle2,
+  Trash2,
+} from '#/components/ui/icons'
+import LoadingState from '#/components/ui/LoadingState'
+import { AppCard, EmptyState, SectionCard } from '#/components'
+import { formatDate } from '#/lib/helpers/datetime-helper'
+import type { Workspace } from '../../../lib/types/workspace'
 import { planLabel, statusLabel } from './tenantDisplay'
 
 interface WorkspaceListSectionProps {
@@ -35,11 +40,7 @@ export function WorkspaceListSection({
     <SectionCard
       title="Danh sách workspace"
       description="Chọn workspace để chuyển ngữ cảnh làm việc trong toàn bộ hệ thống."
-      extra={
-        <Tag bordered={false}>
-          {workspaces.length} workspace
-        </Tag>
-      }
+      extra={<Tag bordered={false}>{workspaces.length} workspace</Tag>}
     >
       {isLoading ? (
         <LoadingState

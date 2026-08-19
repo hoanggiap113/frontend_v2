@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
-import { Bot, Gauge, KeyRound, Loader2, Send, Sparkles } from '#/shared/ui/icons'
-import ScrollArea from '#/shared/components/ScrollArea'
+import { Bot, Gauge, KeyRound, Loader2, Send, Sparkles } from '#/components/ui/icons'
+import ScrollArea from '#/components/ui/ScrollArea'
 import { ChatbotMessageBubble } from './ChatbotMessageBubble'
 import type { ChatbotApiKeyConfig, ChatbotThread } from './types'
 

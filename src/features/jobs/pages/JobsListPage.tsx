@@ -1,39 +1,34 @@
 import { useEffect, type ReactNode } from 'react'
 import { useQueries } from '@tanstack/react-query'
 import { Link } from '@tanstack/react-router'
+import { Typography } from 'antd'
 import {
   CalendarClock,
   CheckCircle2,
   Clock3,
   Plus,
   Workflow,
-} from '#/shared/ui/icons'
-import LoadingState from '#/shared/components/LoadingState'
-import {
-  EmptyState,
-  MetricTile,
-  PageContainer,
-  PageHeader,
-  SectionCard,
-} from '#/shared/ui/index'
-import { useToast } from '#/shared/components/Toast'
-import { formatNumber } from '#/shared/lib/number-helper'
+} from '#/components/ui/icons'
+import LoadingState from '#/components/ui/LoadingState'
+import { EmptyState, MetricTile, SectionCard } from '#/components'
+import { useToast } from '#/app/providers/ToastProvider'
+import { formatNumber } from '#/lib/helpers/number-helper'
 import {
   formatJobLastRun,
   formatJobSchedule,
   JOB_STATUS_STYLES,
   JOB_TYPE_LABEL,
-} from '../lib/job-helper'
-import { getJobErrorMessage } from '../lib/job-error-helper'
-import { jobsService } from '../service/jobs.service'
-import { queryKeys } from '#/shared/service/query-keys'
+} from '../../../lib/helpers/job-helper'
+import { getJobErrorMessage } from '../../../lib/helpers/job-error-helper'
+import { jobsService } from '../../../lib/services/jobs.service'
+import { queryKeys } from '#/lib/services/query-keys'
 import {
   JOB_STATUS_POLL_INTERVAL_MS,
   useJobsQuery,
-} from '../service/jobs.queries'
+} from '../../../lib/hooks/jobs.queries'
 import { selectCurrentWorkspaceId } from '#/app/store/index'
 import { useAppSelector } from '#/app/store/hooks'
-import type { JobItem, JobRunItem } from '../types/job'
+import type { JobItem, JobRunItem } from '../../../lib/types/job'
 
 const jobStatusLabel: Record<JobItem['status'], string> = {
   active: 'Đang bật',
@@ -157,12 +152,19 @@ export default function JobsListPage() {
   }
 
   return (
-    <PageContainer>
-      <PageHeader
-        eyebrow="Vận hành AI"
-        title="Tác vụ AI"
-        description="Tạo, chạy và theo dõi các tác vụ AI đánh giá hội thoại trong một màn hình thống nhất."
-        actions={
+    <div className="page-container">
+      <section className="page-header">
+        <div className="page-header__content">
+          <div className="page-header__eyebrow">Vận hành AI</div>
+          <Typography.Title level={2} className="page-header__title">
+            Tác vụ AI
+          </Typography.Title>
+          <Typography.Text className="page-header__description">
+            Tạo, chạy và theo dõi các tác vụ AI đánh giá hội thoại trong một màn
+            hình thống nhất.
+          </Typography.Text>
+        </div>
+        <div className="page-header__actions">
           <Link
             to="/jobs/create"
             className="inline-flex h-10 items-center gap-2 rounded-lg bg-emerald-600 px-4 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700"
@@ -170,8 +172,8 @@ export default function JobsListPage() {
             <Plus size={14} />
             Tạo tác vụ AI
           </Link>
-        }
-      />
+        </div>
+      </section>
 
       <div className="metric-grid mb-5">
         {stats.map((item) => {
@@ -298,7 +300,7 @@ export default function JobsListPage() {
           </div>
         ) : null}
       </SectionCard>
-    </PageContainer>
+    </div>
   )
 }
 function JobMobileCard({
@@ -329,8 +331,14 @@ function JobMobileCard({
       </div>
 
       <div className="mt-4 grid gap-3 text-sm sm:grid-cols-2">
-        <JobMobileMeta label="Loại" value={JOB_TYPE_LABEL[job.type] ?? job.type} />
-        <JobMobileMeta label="AI runtime" value={`${job.provider} / ${job.model}`} />
+        <JobMobileMeta
+          label="Loại"
+          value={JOB_TYPE_LABEL[job.type] ?? job.type}
+        />
+        <JobMobileMeta
+          label="AI runtime"
+          value={`${job.provider} / ${job.model}`}
+        />
         <JobMobileMeta
           label="Lịch chạy"
           value={formatJobSchedule(job.scheduleType, job.scheduleValue)}
@@ -344,13 +352,7 @@ function JobMobileCard({
   )
 }
 
-function JobMobileMeta({
-  label,
-  value,
-}: {
-  label: string
-  value: ReactNode
-}) {
+function JobMobileMeta({ label, value }: { label: string; value: ReactNode }) {
   return (
     <div className="min-w-0 rounded-xl bg-slate-50 px-3 py-2">
       <div className="text-[11px] font-bold uppercase tracking-wide text-slate-400">
@@ -386,4 +388,3 @@ function JobLastRunContent({
     </div>
   )
 }
-

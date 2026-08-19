@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
-import { MessageCircle } from '#/shared/ui/icons'
-import ScrollArea from '#/shared/components/ScrollArea'
-import type { ConversationItem } from '../../types/message'
+import { MessageCircle } from '#/components/ui/icons'
+import ScrollArea from '#/components/ui/ScrollArea'
+import type { ConversationItem } from '../../../../lib/types/message'
 import { MessageBubble } from './MessageBubble'
 
 interface ConversationTranscriptProps {

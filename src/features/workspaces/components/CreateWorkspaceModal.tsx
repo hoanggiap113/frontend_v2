@@ -1,6 +1,6 @@
 import type { Dispatch, SetStateAction } from 'react'
 import { Input, Modal, Typography } from 'antd'
-import { Building2, Plus } from '#/shared/ui/icons'
+import { Building2, Plus } from '#/components/ui/icons'
 
 interface CreateWorkspaceModalProps {
   canSubmit: boolean

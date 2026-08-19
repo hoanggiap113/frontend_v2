@@ -1,5 +1,5 @@
-import { Bot, Download, FileText } from '#/shared/ui/icons'
-import type { ConversationAttachment, ConversationMessage } from '../../types/message'
+import { Bot, Download, FileText } from '#/components/ui/icons'
+import type { ConversationAttachment, ConversationMessage } from '../../../../lib/types/message'
 
 interface MessageBubbleProps {
   message: ConversationMessage

@@ -20,19 +20,44 @@ function relative(file) {
 
 const legacyFolders = [
   'src/pages',
-  'src/components',
-  'src/services',
   'src/types',
-  'src/lib',
   'src/hooks',
   'src/store',
   'src/routes',
+  'src/services',
+  'src/shared',
 ]
 
 for (const folder of legacyFolders) {
   if (fs.existsSync(path.join(root, folder))) {
-    errors.push(`${folder} vẫn tồn tại. Hãy đặt code vào feature, shared, app hoặc router.`)
+    errors.push(
+      `${folder} vẫn tồn tại. Hãy đặt code vào feature, components, services, lib, app hoặc router.`,
+    )
   }
+}
+
+const componentRoot = path.join(srcRoot, 'components')
+for (const entry of fs.readdirSync(componentRoot, { withFileTypes: true })) {
+  if (entry.isFile() && entry.name !== 'index.ts') {
+    errors.push(
+      `src/components/${entry.name}: component phải nằm trong một folder chức năng.`,
+    )
+  }
+  if (entry.isDirectory() && entry.name !== 'ui') {
+    errors.push(
+      `src/components/${entry.name}: components chỉ dành cho UI dùng chung; code theo chức năng phải về app, router hoặc feature.`,
+    )
+  }
+}
+
+for (const entrypoint of walk(componentRoot).filter(
+  (file) =>
+    path.basename(file) === 'index.ts' &&
+    file !== path.join(componentRoot, 'index.ts'),
+)) {
+  errors.push(
+    `${relative(entrypoint)}: components chỉ sử dụng public API src/components/index.ts.`,
+  )
 }
 
 const featureNames = fs
@@ -42,22 +67,15 @@ const featureNames = fs
 
 for (const feature of featureNames) {
   const directory = path.join(featureRoot, feature)
-  for (const required of ['components', 'hooks', 'service', 'lib', 'pages']) {
-    const requiredDirectory = path.join(directory, required)
-    if (!fs.existsSync(requiredDirectory)) {
-      errors.push(`Feature ${feature} thiếu folder ${required}.`)
-      continue
-    }
-    if (!fs.existsSync(path.join(requiredDirectory, 'index.ts'))) {
-      errors.push(`Feature ${feature}/${required} thiếu entrypoint index.ts.`)
-    }
-  }
-
   const publicApi = path.join(directory, 'index.ts')
-  if (!fs.existsSync(publicApi)) {
-    errors.push(`Feature ${feature} thiếu public API index.ts.`)
-  } else if (fs.readFileSync(publicApi, 'utf8').includes("'./pages'")) {
-    errors.push(`Feature ${feature}: public API root không được export pages.`)
+  const nestedEntrypoints = walk(directory).filter(
+    (file) => path.basename(file) === 'index.ts' && file !== publicApi,
+  )
+  for (const entrypoint of nestedEntrypoints) {
+    errors.push(
+      `${relative(entrypoint)}: feature chỉ nên có một public API tại ` +
+        `src/features/${feature}/index.ts.`,
+    )
   }
 }
 
@@ -77,13 +95,20 @@ function resolveInternalImport(file, specifier) {
 
   const candidates = [
     basePath,
-    ...['.ts', '.tsx', '.js', '.jsx'].map((extension) => `${basePath}${extension}`),
+    ...['.ts', '.tsx', '.js', '.jsx'].map(
+      (extension) => `${basePath}${extension}`,
+    ),
     ...['index.ts', 'index.tsx', 'index.js', 'index.jsx'].map((indexFile) =>
       path.join(basePath, indexFile),
     ),
   ]
 
-  return candidates.find((candidate) => fs.existsSync(candidate) && fs.statSync(candidate).isFile()) ?? null
+  return (
+    candidates.find(
+      (candidate) =>
+        fs.existsSync(candidate) && fs.statSync(candidate).isFile(),
+    ) ?? null
+  )
 }
 
 function findDependencyCycles(files) {
@@ -131,21 +156,85 @@ function findDependencyCycles(files) {
   }
 }
 
-for (const file of walk(srcRoot).filter((item) => codeExtensions.has(path.extname(item)))) {
+for (const file of walk(srcRoot).filter((item) =>
+  codeExtensions.has(path.extname(item)),
+)) {
   const filePath = relative(file)
   const source = fs.readFileSync(file, 'utf8')
   const ownFeatureMatch = filePath.match(/^src\/features\/([^/]+)\//)
   const ownFeature = ownFeatureMatch?.[1]
 
+  if (
+    /\.service\.[jt]sx?$/.test(filePath) &&
+    !filePath.startsWith('src/lib/services/')
+  ) {
+    errors.push(`${filePath}: service phải được đặt trong src/lib/services.`)
+  }
+  if (
+    /\.queries\.[jt]sx?$/.test(filePath) &&
+    !filePath.startsWith('src/lib/hooks/')
+  ) {
+    errors.push(`${filePath}: query hook phải được đặt trong src/lib/hooks.`)
+  }
+  if (
+    /helper\.[jt]sx?$/.test(filePath) &&
+    !filePath.startsWith('src/lib/helpers/')
+  ) {
+    errors.push(`${filePath}: helper phải được đặt trong src/lib/helpers.`)
+  }
+  if (filePath.endsWith('/utils.ts') && filePath !== 'src/lib/utils.ts') {
+    errors.push(`${filePath}: utility phải được gom vào src/lib/utils.ts.`)
+  }
+
   for (const match of source.matchAll(importPattern)) {
     const specifier = match[1]
+    const isInternalImport =
+      specifier.startsWith('#/') ||
+      specifier.startsWith('@/') ||
+      specifier.startsWith('.')
+    const resolvedImport = isInternalImport
+      ? resolveInternalImport(file, specifier)
+      : null
 
-    if (filePath.startsWith('src/shared/') && specifier.startsWith('#/features/')) {
-      errors.push(`${filePath}: shared không được phụ thuộc vào feature (${specifier}).`)
+    if (isInternalImport && !resolvedImport) {
+      errors.push(`${filePath}: import không tồn tại (${specifier}).`)
+      continue
     }
 
-    if (filePath.startsWith('src/shared/') && specifier.startsWith('#/app/')) {
-      errors.push(`${filePath}: shared không được phụ thuộc vào app (${specifier}).`)
+    const layerRules = [
+      {
+        path: 'src/lib/types/',
+        forbiddenPaths: [
+          'src/app/',
+          'src/components/',
+          'src/features/',
+          'src/lib/services/',
+        ],
+      },
+      {
+        path: 'src/components/',
+        forbiddenPaths: ['src/app/', 'src/features/', 'src/lib/services/'],
+      },
+      {
+        path: 'src/lib/services/',
+        forbiddenPaths: ['src/app/', 'src/components/', 'src/features/'],
+      },
+      {
+        path: 'src/lib/hooks/',
+        forbiddenPaths: ['src/app/', 'src/components/', 'src/features/'],
+      },
+    ]
+
+    for (const rule of layerRules) {
+      const dependencyPath = resolvedImport ? relative(resolvedImport) : ''
+      if (
+        filePath.startsWith(rule.path) &&
+        rule.forbiddenPaths.some((prefix) => dependencyPath.startsWith(prefix))
+      ) {
+        errors.push(
+          `${filePath}: ${rule.path} không được phụ thuộc vào ${specifier}.`,
+        )
+      }
     }
 
     const featureImport = specifier.match(/^#\/features\/([^/]+)(\/.*)?$/)
@@ -162,16 +251,16 @@ for (const file of walk(srcRoot).filter((item) => codeExtensions.has(path.extnam
     }
 
     if (deepPath) {
-      const entrypoint = deepPath.slice(1).split('/')[0]
-      const isRouterPageEntrypoint =
-        filePath.startsWith('src/router/') && entrypoint === 'pages'
-      const isAppEntrypoint =
-        filePath.startsWith('src/app/') && ['service', 'store'].includes(entrypoint)
+      const isRouterPageImport =
+        filePath.startsWith('src/router/') &&
+        /^\/(?:pages\/)?[^/]+Page$/.test(deepPath)
+      const isAppSliceImport =
+        filePath === 'src/app/store/index.ts' && /\/[^/]+Slice$/.test(deepPath)
 
-      if (!isRouterPageEntrypoint && !isAppEntrypoint) {
+      if (!isRouterPageImport && !isAppSliceImport) {
         errors.push(
-          `${filePath}: chỉ được sử dụng public API #/features/${importedFeature}; ` +
-            `router chỉ được dùng /pages và app chỉ được dùng /service hoặc /store (${specifier}).`,
+          `${filePath}: chỉ được sử dụng public API ` +
+            `#/features/${importedFeature} (${specifier}).`,
         )
       }
     }

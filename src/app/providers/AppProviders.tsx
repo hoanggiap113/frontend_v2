@@ -3,9 +3,9 @@ import { App as AntdApp, ConfigProvider } from 'antd'
 import type { ThemeConfig } from 'antd'
 import viVN from 'antd/locale/vi_VN'
 import { Provider as ReduxProvider } from 'react-redux'
-import { store } from '#/app/store'
+import { store } from '#/app/store/index'
 import { TanStackQueryProvider } from '#/app/query/queryClient'
-import { ToastProvider } from '#/shared/components/Toast'
+import { ToastProvider } from './ToastProvider'
 import 'antd/dist/reset.css'
 
 const theme: ThemeConfig = {

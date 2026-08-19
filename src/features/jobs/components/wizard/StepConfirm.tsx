@@ -5,8 +5,8 @@ import {
   statusOptions,
 } from '../jobFormConfig'
 import { StepDescription, SummaryRow } from './JobFormControls'
-import { formatJobSchedule } from '../../lib/job-helper'
-import type { JobUpsertPayload } from '../../types/job'
+import { formatJobSchedule } from '../../../../lib/helpers/job-helper'
+import type { JobUpsertPayload } from '../../../../lib/types/job'
 
 export default function StepConfirm({ form }: { form: JobUpsertPayload }) {
   const ruleCount =

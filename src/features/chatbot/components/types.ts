@@ -5,4 +5,4 @@ export type {
   ChatbotMessageRole,
   ChatbotPendingApproval,
   ChatbotThread,
-} from '../types/chatbot'
+} from '../../../lib/types/chatbot'

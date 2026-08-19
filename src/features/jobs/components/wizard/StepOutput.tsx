@@ -1,8 +1,8 @@
-import { CheckCircle2 } from '#/shared/ui/icons'
+import { CheckCircle2 } from '#/components/ui/icons'
 import { clsx } from 'clsx'
 import { outputOptions } from '../jobFormConfig'
 import { StepDescription } from './JobFormControls'
-import type { JobOutputStepProps } from '../../types/job-form'
+import type { JobOutputStepProps } from '../../../../lib/types/job-form'
 
 export default function StepOutput({ form, toggleValue }: JobOutputStepProps) {
   return (

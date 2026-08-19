@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
-import { ExternalLink, Eye, EyeOff, KeyRound, ShieldCheck, X } from '#/shared/ui/icons'
+import { CHATBOT_API_KEY_GUIDE_URL } from '#/constant'
+import { ExternalLink, Eye, EyeOff, KeyRound, ShieldCheck, X } from '#/components/ui/icons'
 import type {
   ChatbotApiKeyConfig,
   ChatbotLlmProvider,
@@ -8,9 +9,7 @@ import {
   chatbotLlmProviders,
   chatbotModelOptions,
   getLlmProviderLabel,
-} from '../lib/llmModels'
-
-const API_KEY_GUIDE_URL = 'https://www.youtube.com/watch?v=nCU3WmylYMA'
+} from '../llmModels'
 
 interface ChatbotApiKeyDialogProps {
   initialConfig: ChatbotApiKeyConfig | null
@@ -187,7 +186,7 @@ export function ChatbotApiKeyDialog({
               </span>
             </div>
             <a
-              href={API_KEY_GUIDE_URL}
+              href={CHATBOT_API_KEY_GUIDE_URL}
               target="_blank"
               rel="noreferrer"
               className="inline-flex items-center gap-2 rounded-lg bg-white px-3 py-2 text-xs font-semibold text-emerald-700 shadow-sm ring-1 ring-emerald-100 transition hover:bg-emerald-50"

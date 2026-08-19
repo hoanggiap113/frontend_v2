@@ -8,7 +8,7 @@ import {
   ShieldCheck,
   UserRound,
   X,
-} from '#/shared/ui/icons'
+} from '#/components/ui/icons'
 import type { ChatbotMessage } from './types'
 
 interface ChatbotMessageBubbleProps {

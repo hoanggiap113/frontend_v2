@@ -1,5 +1,5 @@
-import MetricTile from '#/shared/ui/MetricTile'
-import type { AppIcon } from '#/shared/ui/icons'
+import MetricTile from '#/components/ui/MetricTile'
+import type { AppIcon } from '#/components/ui/icons'
 
 export interface WorkspaceSummaryItem {
   icon: AppIcon

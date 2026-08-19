@@ -12,8 +12,8 @@ import {
   TextArea,
   TextInput,
 } from './JobFormControls'
-import type { JobStatus } from '../../types/job'
-import type { JobStepBaseProps } from '../../types/job-form'
+import type { JobStatus } from '../../../../lib/types/job'
+import type { JobStepBaseProps } from '../../../../lib/types/job-form'
 
 export default function StepType({ form, setFormValue }: JobStepBaseProps) {
   function sameRules(left: string[], right: string[]) {

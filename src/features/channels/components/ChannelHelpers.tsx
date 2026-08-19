@@ -3,12 +3,12 @@ import {
   CHANNEL_STATUS_LABEL,
   CHANNEL_TYPE_LABEL,
   SYNC_STATUS_LABEL,
-} from '../lib/channel-helper'
+} from '../../../lib/helpers/channel-helper'
 import type {
   ChannelStatus,
   ChannelType,
   SyncStatus,
-} from '../types/channel'
+} from '../../../lib/types/channel'
 
 interface BadgeProps {
   label: string

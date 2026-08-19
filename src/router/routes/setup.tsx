@@ -1,6 +1,6 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
-import { readAccessToken } from '#/shared/lib/browser-storage'
-import { SetupPage } from '#/features/auth/pages'
+import { readAccessToken } from '#/lib/browser-storage'
+import SetupPage from '#/features/auth/pages/SetupPage'
 
 export const Route = createFileRoute('/setup')({
   beforeLoad: () => {

@@ -1,6 +1,6 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
-import { readAccessToken } from '#/shared/lib/browser-storage'
-import { VerifyEmailPage } from '#/features/auth/pages'
+import { readAccessToken } from '#/lib/browser-storage'
+import VerifyEmailPage from '#/features/auth/pages/VerifyEmailPage'
 
 export const Route = createFileRoute('/verify-email')({
   beforeLoad: () => {

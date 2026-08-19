@@ -14,12 +14,12 @@ import StepOutput from './wizard/StepOutput'
 import StepRules from './wizard/StepRules'
 import StepSchedule from './wizard/StepSchedule'
 import StepType from './wizard/StepType'
-import { channelsService } from '#/features/channels'
-import { queryKeys } from '#/shared/service/query-keys'
+import { channelsService } from '#/lib/services/channels.service'
+import { queryKeys } from '#/lib/services/query-keys'
 import { useAppSelector } from '#/app/store/hooks'
 import { selectCurrentWorkspaceId } from '#/app/store/index'
-import type { JobUpsertPayload } from '../types/job'
-import type { JobFormProps } from '../types/job-form'
+import type { JobUpsertPayload } from '../../../lib/types/job'
+import type { JobFormProps } from '../../../lib/types/job-form'
 
 export default function JobForm({
   initialJob,

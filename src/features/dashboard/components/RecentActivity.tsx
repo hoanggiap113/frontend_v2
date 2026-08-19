@@ -1,5 +1,5 @@
 import { Progress, Tag, Typography } from 'antd'
-import { EmptyState, SectionCard } from '#/shared/ui/index'
+import { EmptyState, SectionCard } from '#/components'
 import {
   AlertCircle,
   Bot,
@@ -7,10 +7,10 @@ import {
   Clock,
   LoaderCircle,
   type AppIcon,
-} from '#/shared/ui/icons'
-import ScrollArea from '#/shared/components/ScrollArea'
-import { formatDateTime, formatDuration } from '#/shared/lib/datetime-helper'
-import type { JobRunSummaryResponse } from '../types'
+} from '#/components/ui/icons'
+import ScrollArea from '#/components/ui/ScrollArea'
+import { formatDateTime, formatDuration } from '#/lib/helpers/datetime-helper'
+import type { JobRunSummaryResponse } from '../../../lib/types/dashboard'
 
 interface Activity {
   id: string

@@ -1,7 +1,7 @@
-import { Clock3, Eye, LoaderCircle } from '#/shared/ui/icons'
-import { formatDateTime } from '#/shared/lib/datetime-helper'
-import { formatJobRunFinishedAt } from '../../lib/job-helper'
-import type { JobRunItem } from '../../types/job'
+import { Clock3, Eye, LoaderCircle } from '#/components/ui/icons'
+import { formatDateTime } from '#/lib/helpers/datetime-helper'
+import { formatJobRunFinishedAt } from '../../../../lib/helpers/job-helper'
+import type { JobRunItem } from '../../../../lib/types/job'
 
 const statusStyle: Record<JobRunItem['status'], string> = {
   failed: 'bg-rose-50 text-rose-700',

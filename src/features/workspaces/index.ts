@@ -1,6 +1,13 @@
-export * from './components'
-export * from './hooks'
-export * from './lib'
-export * from './service'
-export * from './store'
-export type * from './types'
+export { CreateWorkspaceModal } from './components/CreateWorkspaceModal'
+export { WorkspaceListSection } from './components/WorkspaceListSection'
+export {
+  WorkspaceSummaryGrid,
+  type WorkspaceSummaryItem,
+} from './components/WorkspaceSummaryGrid'
+export * from './components/tenantDisplay'
+export { useWorkspaceActions } from './useWorkspaceActions'
+export {
+  default as workspaceReducer,
+  setCurrentWorkspaceId,
+  setWorkspaces,
+} from './workspaceSlice'

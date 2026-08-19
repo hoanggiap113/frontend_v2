@@ -1,4 +1,4 @@
-import type { Workspace } from '../types/workspace'
+import type { Workspace } from '../../../lib/types/workspace'
 
 export const planLabel: Record<Workspace['plan'], string> = {
   enterprise: 'Enterprise',

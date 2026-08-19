@@ -1,5 +1,5 @@
-import { Bot, Clock, Loader2, Plus, Search, ShieldCheck } from '#/shared/ui/icons'
-import ScrollArea from '#/shared/components/ScrollArea'
+import { Bot, Clock, Loader2, Plus, Search, ShieldCheck } from '#/components/ui/icons'
+import ScrollArea from '#/components/ui/ScrollArea'
 import type { ChatbotThread } from './types'
 
 interface ChatbotHistoryProps {

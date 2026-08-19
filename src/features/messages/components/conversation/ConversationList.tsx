@@ -1,8 +1,8 @@
-import { Check, ChevronDown, Search, SlidersHorizontal } from '#/shared/ui/icons'
+import { Check, ChevronDown, Search, SlidersHorizontal } from '#/components/ui/icons'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import ScrollArea from '#/shared/components/ScrollArea'
-import type { MessageChannelFilter, MessageChannelOption } from '../../lib/message-helper'
-import type { ConversationItem } from '../../types/message'
+import ScrollArea from '#/components/ui/ScrollArea'
+import type { MessageChannelFilter, MessageChannelOption } from '../../../../lib/helpers/message-helper'
+import type { ConversationItem } from '../../../../lib/types/message'
 
 interface ConversationListProps {
   channel: MessageChannelFilter

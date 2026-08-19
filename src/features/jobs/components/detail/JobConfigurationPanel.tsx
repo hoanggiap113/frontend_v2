@@ -6,10 +6,10 @@ import {
   ScrollText,
   Settings2,
   X,
-} from '#/shared/ui/icons'
-import type { AppIcon } from '#/shared/ui/icons'
-import ScrollArea from '#/shared/components/ScrollArea'
-import { getChannelTypeLabel } from '#/features/channels'
+} from '#/components/ui/icons'
+import type { AppIcon } from '#/components/ui/icons'
+import ScrollArea from '#/components/ui/ScrollArea'
+import { getChannelTypeLabel } from '#/lib/helpers/channel-helper'
 
 export interface SelectedJobChannel {
   id: string

@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import PlaceholderPage from '#/shared/components/PlaceholderPage'
+import PlaceholderPage from '#/router/components/PlaceholderPage'
 
 function CostLogRoute() {
   return <PlaceholderPage title="Nhật ký chi phí" />

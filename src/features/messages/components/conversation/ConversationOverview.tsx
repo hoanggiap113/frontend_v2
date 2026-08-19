@@ -5,12 +5,12 @@ import {
   Clock3,
   Tag,
   UserRound,
-} from '#/shared/ui/icons'
+} from '#/components/ui/icons'
 import {
   AI_VERDICT_META,
   getConversationStatusMeta,
-} from '../../lib/message-helper'
-import type { ConversationItem } from '../../types/message'
+} from '../../../../lib/helpers/message-helper'
+import type { ConversationItem } from '../../../../lib/types/message'
 
 interface ConversationOverviewProps {
   conversation: ConversationItem

@@ -1,7 +1,7 @@
 import { Progress, Tag, Typography } from 'antd'
-import { EmptyState, SectionCard } from '#/shared/ui/index'
-import { formatNumber } from '#/shared/lib/number-helper'
-import type { TagStatsResponse } from '../types'
+import { EmptyState, SectionCard } from '#/components'
+import { formatNumber } from '#/lib/helpers/number-helper'
+import type { TagStatsResponse } from '../../../lib/types/dashboard'
 
 function getDisplayTag(tag: string) {
   if (!tag || tag === 'Unclassified') return 'Chưa phân loại'

@@ -14,10 +14,10 @@ import {
   Plug,
   Users,
   Workflow,
-} from '#/shared/ui/icons'
+} from '#/components/ui/icons'
 import { selectCurrentWorkspace, selectWorkspaces } from '#/app/store/index'
 import { useAppDispatch, useAppSelector } from '#/app/store/hooks'
-import { setCurrentWorkspaceId } from '#/features/workspaces/store'
+import { setCurrentWorkspaceId } from '#/features/workspaces'
 
 interface NavigationItem {
   to: string

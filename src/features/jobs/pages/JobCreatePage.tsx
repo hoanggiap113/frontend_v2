@@ -1,9 +1,9 @@
 import { useNavigate } from '@tanstack/react-router'
-import PageHeader from '#/shared/components/PageHeader'
-import { useToast } from '#/shared/components/Toast'
+import { Typography } from 'antd'
+import { useToast } from '#/app/providers/ToastProvider'
 import JobForm from '../components/JobForm'
-import { getJobErrorMessage } from '../lib/job-error-helper'
-import { useCreateJobMutation } from '../service/jobs.queries'
+import { getJobErrorMessage } from '../../../lib/helpers/job-error-helper'
+import { useCreateJobMutation } from '../../../lib/hooks/jobs.queries'
 import { selectCurrentWorkspaceId } from '#/app/store/index'
 import { useAppSelector } from '#/app/store/hooks'
 
@@ -15,10 +15,16 @@ export default function JobCreatePage() {
 
   return (
     <div className="space-y-6 p-6">
-      <PageHeader
-        title="Tạo tác vụ AI mới"
-        description="Thiết lập tác vụ phân tích theo từng bước."
-      />
+      <section className="page-header">
+        <div className="page-header__content">
+          <Typography.Title level={2} className="page-header__title">
+            Tạo tác vụ AI mới
+          </Typography.Title>
+          <Typography.Text className="page-header__description">
+            Thiết lập tác vụ phân tích theo từng bước.
+          </Typography.Text>
+        </div>
+      </section>
       <JobForm
         submitLabel="Tạo tác vụ AI"
         onSubmit={async (payload) => {

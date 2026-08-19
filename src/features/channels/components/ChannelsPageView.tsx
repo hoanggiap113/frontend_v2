@@ -6,27 +6,20 @@ import {
   MessageSquare,
   Plus,
   RefreshCw,
-} from '#/shared/ui/icons'
-import { LoadingState } from '#/shared/components'
-import {
-  AppCard,
-  EmptyState,
-  PageContainer,
-  PageHeader,
-  SectionCard,
-} from '#/shared/ui'
-import { formatDateTime, formatNumber } from '#/shared/lib'
+} from '#/components/ui/icons'
+import { AppCard, EmptyState, LoadingState, SectionCard } from '#/components'
+import { formatDateTime, formatNumber } from '#/lib/index'
 import {
   ChannelStatusBadge,
   ChannelTypeBadge,
   SyncStatusBadge,
 } from './ChannelHelpers'
 import ConnectChannelModal from './ConnectChannelModal'
-import type { Channel, FacebookPageOption } from '../types/channel'
+import type { Channel, FacebookPageOption } from '../../../lib/types/channel'
 import type {
   ChannelsPageViewProps,
   FacebookPagePickerState,
-} from '../types/channels-page'
+} from '../../../lib/types/channels-page'
 
 export function ChannelsPageView({
   channels,
@@ -52,17 +45,28 @@ export function ChannelsPageView({
   totalItems,
 }: ChannelsPageViewProps) {
   return (
-    <PageContainer>
-      <PageHeader
-        eyebrow="Kết nối dữ liệu"
-        title="Kênh chat"
-        description={`${filteredCount} kênh đang hiển thị. Quản lý kết nối Facebook và Zalo OA tại một nơi.`}
-        actions={
-          <Button type="primary" icon={<Plus size={16} />} onClick={onOpenConnect}>
+    <div className="page-container">
+      <section className="page-header">
+        <div className="page-header__content">
+          <div className="page-header__eyebrow">Kết nối dữ liệu</div>
+          <Typography.Title level={2} className="page-header__title">
+            Kênh chat
+          </Typography.Title>
+          <Typography.Text className="page-header__description">
+            {filteredCount} kênh đang hiển thị. Quản lý kết nối Facebook và Zalo
+            OA tại một nơi.
+          </Typography.Text>
+        </div>
+        <div className="page-header__actions">
+          <Button
+            type="primary"
+            icon={<Plus size={16} />}
+            onClick={onOpenConnect}
+          >
             Kết nối kênh mới
           </Button>
-        }
-      />
+        </div>
+      </section>
 
       <SectionCard
         title="Danh sách kênh"
@@ -75,7 +79,11 @@ export function ChannelsPageView({
             title="Chưa có kênh nào"
             description="Kết nối kênh đầu tiên để bắt đầu đồng bộ hội thoại."
             action={
-              <Button type="primary" icon={<Plus size={15} />} onClick={onOpenConnect}>
+              <Button
+                type="primary"
+                icon={<Plus size={15} />}
+                onClick={onOpenConnect}
+              >
                 Kết nối kênh
               </Button>
             }
@@ -126,11 +134,17 @@ export function ChannelsPageView({
           onSelect={onSelectFacebookPage}
         />
       ) : null}
-    </PageContainer>
+    </div>
   )
 }
 
-function ChannelCard({ channel, onClick }: { channel: Channel; onClick: () => void }) {
+function ChannelCard({
+  channel,
+  onClick,
+}: {
+  channel: Channel
+  onClick: () => void
+}) {
   const statusIcon = {
     active: <CheckCircle2 size={13} className="text-emerald-500" />,
     inactive: <Clock size={13} className="text-slate-400" />,
@@ -152,7 +166,9 @@ function ChannelCard({ channel, onClick }: { channel: Channel; onClick: () => vo
             <MessageSquare size={18} />
           </div>
           <div className="min-w-0">
-            <div className="truncate text-sm font-bold text-slate-800">{channel.name}</div>
+            <div className="truncate text-sm font-bold text-slate-800">
+              {channel.name}
+            </div>
             <div className="mt-1">
               <ChannelTypeBadge type={channel.type} />
             </div>
@@ -216,7 +232,9 @@ function FacebookPagePickerModal({
         Chọn page muốn đồng bộ hội thoại vào workspace.
       </Typography.Paragraph>
 
-      {error ? <Alert type="error" showIcon message={error} className="mb-4" /> : null}
+      {error ? (
+        <Alert type="error" showIcon message={error} className="mb-4" />
+      ) : null}
       {loading ? <LoadingState title="Đang tải danh sách page" /> : null}
 
       {!loading && !error && pages.length === 0 ? (
@@ -237,7 +255,9 @@ function FacebookPagePickerModal({
                   key="connect"
                   type="primary"
                   loading={submitting && connectingPageId === pageOption.pageId}
-                  disabled={submitting && connectingPageId !== pageOption.pageId}
+                  disabled={
+                    submitting && connectingPageId !== pageOption.pageId
+                  }
                   onClick={() => onSelect(pageOption)}
                 >
                   Kết nối

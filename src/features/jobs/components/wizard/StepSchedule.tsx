@@ -12,8 +12,8 @@ import {
   StepDescription,
   TextInput,
 } from './JobFormControls'
-import { formatJobSchedule } from '../../lib/job-helper'
-import type { JobStepBaseProps } from '../../types/job-form'
+import { formatJobSchedule } from '../../../../lib/helpers/job-helper'
+import type { JobStepBaseProps } from '../../../../lib/types/job-form'
 
 type CronMode = 'daily' | 'weekly' | 'monthly' | 'custom'
 
