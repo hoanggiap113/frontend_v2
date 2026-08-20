@@ -4,8 +4,6 @@ export interface Workspace {
   id: string
   name: string
   slug: string
-  channelsCount: number
-  jobsCount: number
   membersCount: number
   status: 'active' | 'trial' | 'paused'
   plan: 'starter' | 'growth' | 'enterprise'

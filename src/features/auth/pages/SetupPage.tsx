@@ -1,7 +1,18 @@
 import { useState } from 'react'
 import { useNavigate } from '@tanstack/react-router'
-import { AlertCircle, Lock, Mail, ShieldCheck, User } from '#/components/ui/icons'
-import { AuthBrand, AuthFooter, FieldWrapper, SubmitButton } from '../AuthShared'
+import {
+  AlertCircle,
+  Lock,
+  Mail,
+  ShieldCheck,
+  User,
+} from '#/components/ui/icons'
+import {
+  AuthBrand,
+  AuthFooter,
+  FieldWrapper,
+  SubmitButton,
+} from '../AuthShared'
 import { authService } from '../../../lib/services/auth.service'
 import { useAppDispatch } from '#/app/store/hooks'
 import { setSession } from '../authSlice'
@@ -44,8 +55,12 @@ export default function SetupPage() {
             <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
               <ShieldCheck size={28} />
             </div>
-            <h2 className="text-lg font-bold text-slate-800">Thiết lập tài khoản quản trị đầu tiên</h2>
-            <p className="mt-1 text-sm text-slate-500">Màn này tương ứng Setup.vue ở bản Vue cũ.</p>
+            <h2 className="text-lg font-bold text-slate-800">
+              Thiết lập tài khoản quản trị đầu tiên
+            </h2>
+            <p className="mt-1 text-sm text-slate-500">
+              Màn này tương ứng Setup.vue ở bản Vue cũ.
+            </p>
           </div>
 
           {error ? (
@@ -57,21 +72,43 @@ export default function SetupPage() {
           <form className="space-y-4" onSubmit={handleSubmit}>
             <FieldWrapper label="Email">
               <Mail size={15} className="text-slate-400" />
-              <input className="flex-1 bg-transparent text-sm outline-none" value={email} onChange={(e) => setEmail(e.target.value)} />
+              <input
+                className="flex-1 bg-transparent text-sm outline-none"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
             </FieldWrapper>
             <FieldWrapper label="Tên hiển thị">
               <User size={15} className="text-slate-400" />
-              <input className="flex-1 bg-transparent text-sm outline-none" value={name} onChange={(e) => setName(e.target.value)} />
+              <input
+                className="flex-1 bg-transparent text-sm outline-none"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
             </FieldWrapper>
             <FieldWrapper label="Mật khẩu">
               <Lock size={15} className="text-slate-400" />
-              <input type="password" className="flex-1 bg-transparent text-sm outline-none" value={password} onChange={(e) => setPassword(e.target.value)} />
+              <input
+                type="password"
+                className="flex-1 bg-transparent text-sm outline-none"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
             </FieldWrapper>
             <FieldWrapper label="Nhập lại mật khẩu">
               <Lock size={15} className="text-slate-400" />
-              <input type="password" className="flex-1 bg-transparent text-sm outline-none" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+              <input
+                type="password"
+                className="flex-1 bg-transparent text-sm outline-none"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
             </FieldWrapper>
-            <SubmitButton loading={loading} label="Hoàn tất thiết lập" loadingLabel="Đang tạo tài khoản..." />
+            <SubmitButton
+              loading={loading}
+              label="Hoàn tất thiết lập"
+              loadingLabel="Đang tạo tài khoản..."
+            />
           </form>
         </div>
         <AuthFooter />

@@ -1,5 +1,6 @@
 import {
   LEGACY_AGENT_KEYS,
+  LEGACY_AUTH_TOKEN_KEYS,
   LEGACY_TENANT_KEYS,
   STORAGE_KEYS,
 } from '#/constant'
@@ -15,26 +16,24 @@ export function cleanupLegacyLocalStorage() {
 
   const currentTenant = storage.getItem(STORAGE_KEYS.currentTenant)
   if (!currentTenant) {
-    const legacyTenant = LEGACY_TENANT_KEYS
-      .map((key) => storage.getItem(key))
-      .find((value): value is string => Boolean(value))
+    const legacyTenant = LEGACY_TENANT_KEYS.map((key) =>
+      storage.getItem(key),
+    ).find((value): value is string => Boolean(value))
     if (legacyTenant) {
       storage.setItem(STORAGE_KEYS.currentTenant, legacyTenant)
     }
   }
 
-  ;[...LEGACY_TENANT_KEYS, ...LEGACY_AGENT_KEYS].forEach((key) => {
+  LEGACY_TENANT_KEYS.forEach((key) => {
     storage.removeItem(key)
   })
-}
 
-export function readAccessToken() {
-  cleanupLegacyLocalStorage()
-  return getLocalStorage()?.getItem(STORAGE_KEYS.accessToken) ?? ''
-}
-
-export function readRefreshToken() {
-  return getLocalStorage()?.getItem(STORAGE_KEYS.refreshToken) ?? ''
+  // Tokens are now managed exclusively by HttpOnly cookies. Remove values
+  // left behind by older frontend versions without touching tenant data.
+  const legacyAuthKeys = [...LEGACY_AGENT_KEYS, ...LEGACY_AUTH_TOKEN_KEYS]
+  legacyAuthKeys.forEach((key) => {
+    storage.removeItem(key)
+  })
 }
 
 export function readCurrentTenantId() {
@@ -55,6 +54,18 @@ export function readStoredUser() {
   return getLocalStorage()?.getItem(STORAGE_KEYS.user) ?? ''
 }
 
+export function hasStoredSession() {
+  const raw = readStoredUser()
+  if (!raw) return false
+
+  try {
+    return Boolean(JSON.parse(raw))
+  } catch {
+    removeStoredUser()
+    return false
+  }
+}
+
 export function persistStoredUser(value: string) {
   getLocalStorage()?.setItem(STORAGE_KEYS.user, value)
 }
@@ -63,29 +74,8 @@ export function removeStoredUser() {
   getLocalStorage()?.removeItem(STORAGE_KEYS.user)
 }
 
-export function persistAuthTokens(tokens: {
-  accessToken: string
-  refreshToken?: string
-}) {
-  const storage = getLocalStorage()
-  if (!storage) return
-
-  storage.setItem(STORAGE_KEYS.accessToken, tokens.accessToken)
-  if (tokens.refreshToken) {
-    storage.setItem(STORAGE_KEYS.refreshToken, tokens.refreshToken)
-  }
-  cleanupLegacyLocalStorage()
-}
-
-export function clearAuthStorage() {
-  const storage = getLocalStorage()
-  if (!storage) return
-
-  storage.removeItem(STORAGE_KEYS.accessToken)
-  storage.removeItem(STORAGE_KEYS.refreshToken)
-  storage.removeItem(STORAGE_KEYS.user)
-  storage.removeItem(STORAGE_KEYS.currentTenant)
-  storage.removeItem(STORAGE_KEYS.knownUserNames)
+export function clearStoredAuthUser() {
+  removeStoredUser()
   cleanupLegacyLocalStorage()
 }
 

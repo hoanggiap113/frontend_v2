@@ -10,11 +10,11 @@ import {
   FieldWrapper,
   SubmitButton,
 } from '../AuthShared'
-import { authService } from '../../../lib/services/auth.service'
+import { authService } from '#/lib/services/auth.service'
 import { useAppDispatch } from '#/app/store/hooks'
 import { setSession } from '../authSlice'
 import { useToast } from '#/app/providers/ToastProvider'
-import { getAuthErrorFeedback } from '../../../lib/helpers/auth-error-helper'
+import { getAuthErrorFeedback } from '#/lib/helpers/auth-error-helper'
 
 interface LoginFields {
   email: string
@@ -43,6 +43,13 @@ export default function LoginPage() {
         dispatch(setSession(session))
         navigate({ to: '/' })
       } catch (error) {
+        if (import.meta.env.DEV) {
+          console.error('[auth/login] Login flow failed', {
+            email: value.email,
+            error,
+          })
+        }
+
         const feedback = getAuthErrorFeedback(error, 'login')
 
         toast({
@@ -85,7 +92,9 @@ export default function LoginPage() {
           >
             <form.Field
               name="email"
-              validators={{ onChange: rules.loginEmail }}
+              validators={{
+                onChange: ({ value }) => rules.loginEmail(value),
+              }}
             >
               {(field: FieldApi<LoginFields, 'email'>) => (
                 <FieldWrapper
@@ -107,7 +116,9 @@ export default function LoginPage() {
 
             <form.Field
               name="password"
-              validators={{ onBlur: rules.loginPassword }}
+              validators={{
+                onBlur: ({ value }) => rules.loginPassword(value),
+              }}
             >
               {(field: FieldApi<LoginFields, 'password'>) => (
                 <FieldWrapper

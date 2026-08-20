@@ -1,10 +1,13 @@
 export const STORAGE_KEYS = {
-  accessToken: 'cqa_access_token',
-  refreshToken: 'cqa_refresh_token',
   user: 'cqa_user',
   currentTenant: 'cqa_current_tenant',
   knownUserNames: 'cqa_known_user_names',
 } as const
+
+export const LEGACY_AUTH_TOKEN_KEYS = [
+  'cqa_access_token',
+  'cqa_refresh_token',
+] as const
 
 export const LEGACY_TENANT_KEYS = [
   'cqa-current-tenant',

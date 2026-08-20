@@ -1,16 +1,13 @@
-import { isMockMode } from '#/lib/env'
+import { isMockMode } from '#/lib/config/env'
 import {
-  persistAuthTokens,
   persistKnownUserNames,
-  persistStoredUser,
   readKnownUserNames,
 } from '#/lib/browser-storage'
-import { endpoints } from '#/lib/services/endpoints'
-import { httpClient } from '#/lib/services/http/client'
+import { endpoints } from '#/lib/config/endpoints'
+import { httpClient } from '#/lib/client'
 import { mockDelay } from '#/lib/utils'
 import type {
   AuthSession,
-  AuthTokenResponse,
   AuthUser,
   LoginPayload,
   RegisterPayload,
@@ -24,19 +21,11 @@ const adminUser: AuthUser = {
   email: 'admin@gmail.com',
   name: 'Admin',
   role: 'ADMIN',
-  permissions: [
-    'channels:rw',
-    'messages:rw',
-    'jobs:rw',
-    'users:rw',
-    'settings:rw',
-  ],
+  permissions: [],
 }
 
 function makeSession(email?: string, name?: string): AuthSession {
   return {
-    accessToken: `mock-token-${Date.now()}`,
-    refreshToken: `mock-refresh-${Date.now()}`,
     user: {
       ...adminUser,
       email: email ?? adminUser.email,
@@ -72,28 +61,6 @@ function saveKnownName(email: string, name: string) {
   persistKnownUserNames(JSON.stringify(names))
 }
 
-function makeSessionFromTokens(
-  tokens: AuthTokenResponse,
-  email: string,
-  name?: string,
-): AuthSession {
-  return {
-    accessToken: tokens.accessToken,
-    refreshToken: tokens.refreshToken,
-    user: {
-      ...adminUser,
-      id: email,
-      email,
-      name: name || readKnownName(email) || email,
-    },
-  }
-}
-
-function persistSession(session: AuthSession) {
-  persistAuthTokens(session)
-  persistStoredUser(JSON.stringify(session.user))
-}
-
 export const authService = {
   async login(payload: LoginPayload): Promise<AuthSession> {
     if (isMockMode()) {
@@ -105,12 +72,23 @@ export const authService = {
       }
       return makeSession('admin@gmail.com', 'Admin')
     }
-    const tokens = await httpClient.post<AuthTokenResponse>(
-      endpoints.auth.login,
-      payload,
-    )
-    const session = makeSessionFromTokens(tokens, payload.email)
-    persistSession(session)
+    const response = await httpClient.post<{
+      success: boolean
+      message: string
+    }>(endpoints.auth.login, payload)
+
+    if (import.meta.env.DEV) {
+      console.debug('[auth/login] Response accepted', response)
+    }
+
+    const session: AuthSession = {
+      user: {
+        ...adminUser,
+        id: payload.email,
+        email: payload.email,
+        name: readKnownName(payload.email) || payload.email,
+      },
+    }
     return session
   },
   async register(payload: RegisterPayload): Promise<RegisterResponse> {
@@ -159,11 +137,11 @@ export const authService = {
     await mockDelay(120)
     return adminUser
   },
-  async logout(refreshToken: string): Promise<void> {
+  async logout(): Promise<void> {
     if (isMockMode()) {
       await mockDelay(120)
       return
     }
-    await httpClient.post<void>(endpoints.auth.logout, { refreshToken })
+    await httpClient.post<void>(endpoints.auth.logout)
   },
 }

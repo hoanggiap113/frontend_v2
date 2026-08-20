@@ -21,7 +21,7 @@ import {
 } from '../../../lib/helpers/job-helper'
 import { getJobErrorMessage } from '../../../lib/helpers/job-error-helper'
 import { jobsService } from '../../../lib/services/jobs.service'
-import { queryKeys } from '#/lib/services/query-keys'
+import { queryKeys } from '#/lib/config/query-keys'
 import {
   JOB_STATUS_POLL_INTERVAL_MS,
   useJobsQuery,

@@ -10,10 +10,14 @@ import {
   Mail,
   User,
 } from '#/components/ui/icons'
-import { AuthBrand, AuthFooter, FieldWrapper } from '#/features/auth'
+import {
+  AuthBrand,
+  AuthFooter,
+  FieldWrapper,
+  setSession,
+} from '#/features/auth'
 import { invitationsService } from '../../lib/services/invitations.service'
 import { useAppDispatch } from '#/app/store/hooks'
-import { setSession } from '#/features/auth'
 import { formatDate } from '#/lib/helpers/datetime-helper'
 import { getPasswordConfirmationError } from '#/lib/helpers/validation-helper'
 import LoadingState from '#/components/ui/LoadingState'
@@ -60,15 +64,13 @@ export default function AcceptInvitationPage({
             },
       )
     },
-    onSuccess: (tokens) => {
+    onSuccess: () => {
       if (!invitation) return
       const displayName =
         name.trim() || invitation.email.split('@')[0] || invitation.email
 
       dispatch(
         setSession({
-          accessToken: tokens.accessToken,
-          refreshToken: tokens.refreshToken,
           user: {
             id: invitation.email,
             email: invitation.email,

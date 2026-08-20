@@ -18,8 +18,6 @@ export interface RegisterPayload {
   password: string
 }
 
-export type { AuthTokenResponse } from '#/lib/types/auth-token'
-
 export interface RegisterResponse {
   message: string
   email: string
@@ -38,7 +36,5 @@ export interface SetupPayload {
 }
 
 export interface AuthSession {
-  accessToken: string
-  refreshToken?: string
   user: AuthUser
 }

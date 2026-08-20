@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { workspacesService } from '../services/workspaces.service'
-import { queryKeys } from '#/lib/services/query-keys'
+import { queryKeys } from '#/lib/config/query-keys'
 import type { Workspace } from '../types/workspace'
 
 export function useWorkspacesQuery() {

@@ -13,10 +13,14 @@ import {
 import { setUser } from '#/features/auth'
 import { toggleSidebar } from '#/app/store/uiSlice'
 import { setCurrentWorkspaceId, setWorkspaces } from '#/features/workspaces'
-import { queryKeys } from '#/lib/services/query-keys'
+import { queryKeys } from '#/lib/config/query-keys'
 import { workspacesService } from '#/lib/services/workspaces.service'
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+export default function AdminLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   const dispatch = useAppDispatch()
   const sidebarCollapsed = useAppSelector(selectSidebarCollapsed)
   const pageTitle = useRouteTitle()
@@ -53,7 +57,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     <div className="app-shell">
       <Sidebar collapsed={sidebarCollapsed} />
       <div className="app-shell__main">
-        <Header onToggleSidebar={() => dispatch(toggleSidebar())} pageTitle={pageTitle} />
+        <Header
+          onToggleSidebar={() => dispatch(toggleSidebar())}
+          pageTitle={pageTitle}
+        />
         <main className="app-shell__content app-scrollbar">{children}</main>
       </div>
     </div>

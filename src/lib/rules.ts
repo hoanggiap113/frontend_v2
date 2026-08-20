@@ -38,7 +38,7 @@ const maxLength =
       : undefined
 
 const compose =
-  <T,>(...validators: Validator<T>[]): Validator<T> =>
+  <T>(...validators: Validator<T>[]): Validator<T> =>
   (value) => {
     for (const validate of validators) {
       const error = validate(value)

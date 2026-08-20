@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate, useSearch } from '@tanstack/react-router'
-import { useForm, type FieldApi } from '@tanstack/react-form'
+import { useForm } from '@tanstack/react-form'
+import type { FieldApi } from '@tanstack/react-form'
 import {
   Mail,
   AlertCircle,
@@ -15,13 +16,9 @@ interface VerifyEmailFields {
   otp: string
 }
 
-interface VerifyEmailSearch {
-  email?: string
-}
-
 export default function VerifyEmailPage() {
   const navigate = useNavigate()
-  const { email } = useSearch({ from: '/verify-email' }) as VerifyEmailSearch
+  const { email } = useSearch({ from: '/verify-email' })
 
   const [done, setDone] = useState(false)
   const [serverError, setServerError] = useState<string | null>(null)
@@ -86,7 +83,7 @@ export default function VerifyEmailPage() {
               Xác thực thành công!
             </h2>
             <p className="text-sm text-slate-500 mb-6">
-              Email của bạn đã được xác thực. Đang chuyển vào dashboard...
+              Email của bạn đã được xác thực. Đang chuyển về trang đăng nhập...
             </p>
             <Link
               to="/login"
@@ -150,7 +147,7 @@ export default function VerifyEmailPage() {
             <form.Field
               name="otp"
               validators={{
-                onChange: (value) => {
+                onChange: ({ value }) => {
                   if (!value) return 'OTP không được bỏ trống'
                 },
               }}

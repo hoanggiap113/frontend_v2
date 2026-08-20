@@ -1,4 +1,4 @@
-import { ApiError } from '#/lib/services/http/client'
+import { ApiError } from '#/lib/client'
 
 export function getApiErrorMessage(error: unknown, fallback: string) {
   if (error instanceof ApiError) return error.message

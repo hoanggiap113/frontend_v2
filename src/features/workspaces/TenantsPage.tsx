@@ -1,18 +1,13 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Button, Tag, Typography } from 'antd'
-import {
-  Building2,
-  MessageSquare,
-  Plus,
-  Users,
-  Workflow,
-} from '#/components/ui/icons'
+import { Building2, Plus, Users } from '#/components/ui/icons'
 import { CreateWorkspaceModal } from './components/CreateWorkspaceModal'
 import { WorkspaceListSection } from './components/WorkspaceListSection'
 import {
-  WorkspaceSummaryGrid,
-  type WorkspaceSummaryItem,
+  WorkspaceSummaryGrid
+  
 } from './components/WorkspaceSummaryGrid'
+import type {WorkspaceSummaryItem} from './components/WorkspaceSummaryGrid';
 import { SectionCard } from '#/components'
 import { useToast } from '#/app/providers/ToastProvider'
 import { useWorkspaceActions } from './useWorkspaceActions'
@@ -56,11 +51,6 @@ export default function TenantsPage() {
 
   const summaryCards = useMemo<WorkspaceSummaryItem[]>(() => {
     const active = workspaces.filter((item) => item.status === 'active').length
-    const channels = workspaces.reduce(
-      (sum, item) => sum + item.channelsCount,
-      0,
-    )
-    const jobs = workspaces.reduce((sum, item) => sum + item.jobsCount, 0)
     const members = workspaces.reduce((sum, item) => sum + item.membersCount, 0)
 
     return [
@@ -69,18 +59,6 @@ export default function TenantsPage() {
         label: 'Workspace',
         note: `${active} đang hoạt động`,
         value: workspaces.length,
-      },
-      {
-        icon: MessageSquare,
-        label: 'Kênh chat',
-        note: 'Tổng kênh đã kết nối',
-        value: channels,
-      },
-      {
-        icon: Workflow,
-        label: 'Tác vụ AI',
-        note: 'Đang được cấu hình',
-        value: jobs,
       },
       {
         icon: Users,
@@ -118,8 +96,7 @@ export default function TenantsPage() {
             Workspaces
           </Typography.Title>
           <Typography.Text className="page-header__description">
-            Tổ chức tenant, phân quyền và chọn workspace vận hành cho kênh chat,
-            tin nhắn và tác vụ AI.
+            Tạo, lựa chọn và quản lý các workspace của hệ thống.
           </Typography.Text>
         </div>
         <div className="page-header__actions">
@@ -144,15 +121,11 @@ export default function TenantsPage() {
           }
           className="mb-5"
         >
-          <div className="grid gap-4 md:grid-cols-4">
+          <div className="grid gap-4 md:grid-cols-3">
             <CurrentWorkspaceItem label="Tên" value={currentWorkspace.name} />
             <CurrentWorkspaceItem
               label="Gói dịch vụ"
               value={planLabel[currentWorkspace.plan]}
-            />
-            <CurrentWorkspaceItem
-              label="Kênh / tác vụ"
-              value={`${currentWorkspace.channelsCount} / ${currentWorkspace.jobsCount}`}
             />
             <CurrentWorkspaceItem
               label="Thành viên"

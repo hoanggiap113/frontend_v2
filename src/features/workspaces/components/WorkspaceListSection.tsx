@@ -52,7 +52,7 @@ export function WorkspaceListSection({
       {!isLoading && workspaces.length === 0 ? (
         <EmptyState
           title="Chưa có workspace"
-          description="Tạo workspace đầu tiên để cấu hình kênh chat, người dùng và tác vụ AI."
+          description="Tạo workspace đầu tiên để bắt đầu thiết lập hệ thống."
         />
       ) : null}
 
@@ -132,10 +132,11 @@ function WorkspaceCard({
         </Tag>
       </div>
 
-      <div className="mt-4 grid grid-cols-3 gap-2">
-        <WorkspaceStat label="Kênh" value={workspace.channelsCount} />
-        <WorkspaceStat label="Tác vụ" value={workspace.jobsCount} />
-        <WorkspaceStat label="Người dùng" value={workspace.membersCount} />
+      <div className="mt-4 rounded-lg bg-slate-50 p-3">
+        <div className="text-xs text-slate-400">Thành viên</div>
+        <div className="mt-1 font-bold text-slate-800">
+          {workspace.membersCount}
+        </div>
       </div>
 
       <div className="mt-4 rounded-lg border border-slate-100 bg-slate-50 p-3">
@@ -184,14 +185,5 @@ function WorkspaceCard({
         </Popconfirm>
       </div>
     </AppCard>
-  )
-}
-
-function WorkspaceStat({ label, value }: { label: string; value: number }) {
-  return (
-    <div className="rounded-lg bg-slate-50 p-3">
-      <div className="text-xs text-slate-400">{label}</div>
-      <div className="mt-1 font-bold text-slate-800">{value}</div>
-    </div>
   )
 }

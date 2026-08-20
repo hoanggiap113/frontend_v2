@@ -18,7 +18,7 @@ import type {
   DashboardFilter,
   OverviewResponse,
 } from '../../lib/types/dashboard'
-import { queryKeys } from '#/lib/services/query-keys'
+import { queryKeys } from '#/lib/config/query-keys'
 import { selectCurrentWorkspaceId } from '#/app/store/index'
 import { useAppSelector } from '#/app/store/hooks'
 import {

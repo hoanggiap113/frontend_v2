@@ -2,18 +2,8 @@ import { Link, useRouterState } from '@tanstack/react-router'
 import { Menu, Select, Tooltip, Typography } from 'antd'
 import type { MenuProps } from 'antd'
 import {
-  Bell,
-  Bot,
-  Building2,
-  ClipboardList,
-  DollarSign,
-  Home,
-  Mail,
-  MessageSquare,
-  MessagesSquare,
-  Plug,
-  Users,
-  Workflow,
+  Bell, Bot, Building2, ClipboardList, DollarSign, Home, Mail,
+  MessageSquare, MessagesSquare, Plug, Users, Workflow,
 } from '#/components/ui/icons'
 import { selectCurrentWorkspace, selectWorkspaces } from '#/app/store/index'
 import { useAppDispatch, useAppSelector } from '#/app/store/hooks'
@@ -49,7 +39,9 @@ function getSelectedKey(pathname: string) {
 
 export default function Sidebar({ collapsed }: { collapsed: boolean }) {
   const dispatch = useAppDispatch()
-  const pathname = useRouterState({ select: (state) => state.location.pathname })
+  const pathname = useRouterState({
+    select: (state) => state.location.pathname,
+  })
   const workspaces = useAppSelector(selectWorkspaces)
   const currentWorkspace = useAppSelector(selectCurrentWorkspace)
 
@@ -60,9 +52,14 @@ export default function Sidebar({ collapsed }: { collapsed: boolean }) {
   }))
 
   return (
-    <aside className={`app-sidebar ${collapsed ? 'app-sidebar--collapsed' : ''}`}>
+    <aside
+      className={`app-sidebar ${collapsed ? 'app-sidebar--collapsed' : ''}`}
+    >
       <div className="app-sidebar__brand">
-        <Tooltip title={collapsed ? 'Chat Quality Agent' : undefined} placement="right">
+        <Tooltip
+          title={collapsed ? 'Chat Quality Agent' : undefined}
+          placement="right"
+        >
           <div className="app-sidebar__logo">
             <Bot size={20} />
           </div>
@@ -102,16 +99,23 @@ export default function Sidebar({ collapsed }: { collapsed: boolean }) {
       />
 
       <div className="app-sidebar__footer">
-        <Tooltip title={collapsed ? currentWorkspace?.name : undefined} placement="right">
+        <Tooltip
+          title={collapsed ? currentWorkspace?.name : undefined}
+          placement="right"
+        >
           <div className="app-sidebar__tenant-mark">
-            <span>{currentWorkspace?.name?.slice(0, 2).toUpperCase() || 'NF'}</span>
+            <span>
+              {currentWorkspace?.name.slice(0, 2).toUpperCase() || 'NF'}
+            </span>
             {!collapsed ? (
               <div className="min-w-0">
                 <div className="truncate text-sm font-semibold text-slate-800">
                   {currentWorkspace?.name || 'Chưa chọn workspace'}
                 </div>
                 <div className="text-xs text-slate-400">
-                  {currentWorkspace?.myRole || currentWorkspace?.plan || 'Workspace'}
+                  {currentWorkspace?.myRole ||
+                    currentWorkspace?.plan ||
+                    'Workspace'}
                 </div>
               </div>
             ) : null}

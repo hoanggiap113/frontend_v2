@@ -1,9 +1,9 @@
-import { endpoints } from '#/lib/services/endpoints'
+import { endpoints } from '#/lib/config/endpoints'
 import { clone, mockDelay } from '#/lib/utils'
 import type { TenantResponse, Workspace } from '../types/workspace'
 import { mockWorkspaces } from './mocks/workspaces.mock'
-import { isMockMode } from '#/lib/env'
-import { httpClient } from '#/lib/services/http/client'
+import { isMockMode } from '#/lib/config/env'
+import { httpClient } from '#/lib/client'
 
 let workspaceState = clone(mockWorkspaces)
 
@@ -13,8 +13,6 @@ function tenantToWorkspace(tenant: TenantResponse): Workspace {
     name: tenant.name,
     slug: tenant.slug,
     myRole: tenant.myRole,
-    channelsCount: 0,
-    jobsCount: 0,
     membersCount: 1,
     status: 'active',
     plan: 'starter',
@@ -40,8 +38,6 @@ export const workspacesService = {
         id: `tenant_${Date.now()}`,
         name: payload.name,
         slug: payload.slug,
-        channelsCount: 0,
-        jobsCount: 0,
         membersCount: 1,
         status: 'trial',
         plan: 'starter',

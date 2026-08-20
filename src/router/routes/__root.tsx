@@ -9,9 +9,7 @@ import InternalServerPage from '#/components/errors/InternalServerPage'
 export const Route = createRootRouteWithContext<RouterContext>()({
   component: RootRoute,
   notFoundComponent: NotFoundPage,
-  errorComponent: () => {
-    <InternalServerPage />
-  }
+  errorComponent: () => <InternalServerPage />,
 })
 
 function RootRoute() {

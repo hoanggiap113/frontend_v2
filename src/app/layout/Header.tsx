@@ -1,31 +1,11 @@
 import { useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
-import {
-  Avatar,
-  Button,
-  Dropdown,
-  Input,
-  Space,
-  Tooltip,
-  Typography,
-} from 'antd'
+import { Avatar, Button, Dropdown, Input, Space, Tooltip, Typography } from 'antd'
 import type { MenuProps } from 'antd'
-import {
-  Bell,
-  LogOut,
-  Menu,
-  RefreshCw,
-  Search,
-  User,
-} from '#/components/ui/icons'
+import { Bell, LogOut, Menu, RefreshCw, Search, User } from '#/components/ui/icons'
 import { useAppDispatch, useAppSelector } from '#/app/store/hooks'
-import {
-  selectAuthUser,
-  selectCurrentWorkspace,
-  selectGlobalSearch,
-} from '#/app/store/index'
-import { readRefreshToken } from '#/lib/browser-storage'
+import { selectAuthUser, selectCurrentWorkspace, selectGlobalSearch } from '#/app/store/index'
 import { authService } from '#/lib/services/auth.service'
 import { clearSession } from '#/features/auth'
 import { setGlobalSearch } from '#/app/store/uiSlice'
@@ -53,10 +33,7 @@ export default function Header({ onToggleSidebar, pageTitle }: HeaderProps) {
 
     setLoggingOut(true)
     try {
-      const refreshToken = readRefreshToken()
-      if (refreshToken) {
-        await authService.logout(refreshToken)
-      }
+      await authService.logout()
     } finally {
       dispatch(clearSession())
       setLoggingOut(false)
@@ -115,35 +92,17 @@ export default function Header({ onToggleSidebar, pageTitle }: HeaderProps) {
       </div>
 
       <div className="app-header__actions">
-        <Input
-          value={search}
-          onChange={(event) => dispatch(setGlobalSearch(event.target.value))}
-          placeholder="Tìm kiếm trong trang..."
-          prefix={<Search size={16} className="text-slate-400" />}
-          allowClear
-          className="app-header__search"
-        />
-
+        <Input value={search} onChange={(event) => dispatch(setGlobalSearch(event.target.value))} placeholder="Tìm kiếm trong trang..." prefix={<Search size={16} className="text-slate-400" />} allowClear className="app-header__search" />
         <Space size={6}>
-          <Tooltip title="Làm mới dữ liệu">
-            <Button
-              type="text"
-              loading={refreshing}
-              icon={!refreshing ? <RefreshCw size={17} /> : undefined}
-              onClick={handleRefresh}
-              aria-label="Làm mới dữ liệu"
-            />
-          </Tooltip>
-          <Tooltip title="Chưa có thông báo mới">
-            <Button
-              type="text"
-              icon={<Bell size={17} />}
-              aria-label="Thông báo"
-            />
-          </Tooltip>
+          <Tooltip title="Làm mới dữ liệu"><Button type="text" loading={refreshing} icon={!refreshing ? <RefreshCw size={17} /> : undefined} onClick={handleRefresh} aria-label="Làm mới dữ liệu" /></Tooltip>
+          <Tooltip title="Chưa có thông báo mới"><Button type="text" icon={<Bell size={17} />} aria-label="Thông báo" /></Tooltip>
         </Space>
 
-        <Dropdown menu={{ items: accountItems }} placement="bottomRight" trigger={['click']}>
+        <Dropdown
+          menu={{ items: accountItems }}
+          placement="bottomRight"
+          trigger={['click']}
+        >
           <button type="button" className="app-header__account">
             <Avatar className="app-header__avatar">{avatarLabel}</Avatar>
             <span className="app-header__account-copy">

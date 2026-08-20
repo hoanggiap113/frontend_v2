@@ -1,6 +1,7 @@
-import HomePage from '#/features/dashboard/HomePage'
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_layout/')({
-  component: HomePage,
+  beforeLoad: () => {
+    throw redirect({ to: '/tenants' })
+  },
 })

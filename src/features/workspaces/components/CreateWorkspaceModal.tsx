@@ -38,7 +38,8 @@ export function CreateWorkspaceModal({
       onCancel={onClose}
     >
       <Typography.Paragraph type="secondary">
-        Workspace mới sẽ được chọn làm workspace hiện tại sau khi tạo thành công.
+        Workspace mới sẽ được chọn làm workspace hiện tại sau khi tạo thành
+        công.
       </Typography.Paragraph>
 
       <div className="space-y-4">
