@@ -1,6 +1,6 @@
-import MCPConnectionsPage from '#/features/mcp/MCPConnectionsPage'
+import PlaceholderPage from '#/router/components/PlaceholderPage'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_layout/mcp-connect')({
-  component: MCPConnectionsPage,
+  component: () => <PlaceholderPage title="Kết nối MCP" />,
 })

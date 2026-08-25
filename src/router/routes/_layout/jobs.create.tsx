@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
-import JobCreatePage from '#/features/jobs/pages/JobCreatePage'
+import PlaceholderPage from '#/router/components/PlaceholderPage'
 
 export const Route = createFileRoute('/_layout/jobs/create')({
-  component: JobCreatePage,
+  component: () => <PlaceholderPage title="Tạo tác vụ AI" />,
 })

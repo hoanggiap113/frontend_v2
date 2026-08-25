@@ -8,7 +8,7 @@ import { SyncScoringNotice } from './components/SyncScoringNotice'
 import {
   filterConversations,
   type MessageChannelFilter,
-} from '../../lib/helpers/message-helper'
+} from '#/lib/helpers/message-helper'
 import { formatNumber } from '#/lib/helpers/number-helper'
 import { useChannelsQuery } from '#/lib/hooks/channels.queries'
 import { useConversationsQuery } from '../../lib/hooks/messages.queries'

@@ -1,91 +1,45 @@
-import { useEffect, useMemo, useState } from 'react'
-import { Button, Tag, Typography } from 'antd'
-import { Building2, Plus, Users } from '#/components/ui/icons'
-import { CreateWorkspaceModal } from './components/CreateWorkspaceModal'
-import { WorkspaceListSection } from './components/WorkspaceListSection'
-import {
-  WorkspaceSummaryGrid
-  
-} from './components/WorkspaceSummaryGrid'
-import type {WorkspaceSummaryItem} from './components/WorkspaceSummaryGrid';
+import { useEffect, useMemo } from 'react'
+import { Alert, Pagination, Tag, Typography } from 'antd'
+import { Building2 } from '#/components/ui/icons'
 import { SectionCard } from '#/components'
-import { useToast } from '#/app/providers/ToastProvider'
-import { useWorkspaceActions } from './useWorkspaceActions'
-import { getApiErrorMessage } from '#/lib/helpers/api-error-helper'
-import { canCreateWorkspace } from '../../lib/helpers/tenant-helper'
-import { useWorkspacesQuery } from '../../lib/hooks/workspaces.queries'
-import { selectCurrentWorkspaceId } from '#/app/store/index'
-import { useAppSelector } from '#/app/store/hooks'
-import { planLabel } from './components/tenantDisplay'
+import { useCurrentTenant } from '#/app/providers/TenantProvider'
+import { useTenant } from '#/lib/hooks/useTenant'
+import type { GetTenantsQuery } from '#/lib/types/workspace'
+import { WorkspaceListSection } from './components/WorkspaceListSection'
+import { WorkspaceSummaryGrid } from './components/WorkspaceSummaryGrid'
+import type { WorkspaceSummaryItem } from './components/WorkspaceSummaryGrid'
 
-export default function TenantsPage() {
-  const { toast } = useToast()
-  const currentWorkspaceId = useAppSelector(selectCurrentWorkspaceId)
-  const [form, setForm] = useState({ name: '', slug: '' })
-  const [showCreateModal, setShowCreateModal] = useState(false)
-  const {
-    createMutation,
-    deleteMutation,
-    createWorkspace,
-    deleteWorkspace,
-    selectWorkspace,
-  } = useWorkspaceActions({
-    onWorkspaceCreated: () => {
-      setForm({ name: '', slug: '' })
-      setShowCreateModal(false)
-    },
-  })
+interface TenantsPageProps {
+  onPaginationChange: (page: number, limit: number) => void
+  query: GetTenantsQuery
+}
 
-  const {
-    data: workspaces = [],
-    error: loadError,
-    isLoading,
-  } = useWorkspacesQuery()
+export default function TenantsPage({
+  onPaginationChange,
+  query,
+}: TenantsPageProps) {
+  const { currentTenantId, selectTenant } = useCurrentTenant()
+  const { data: tenantPage, error, isFetching } = useTenant(query)
+  const tenants = tenantPage?.data ?? []
+  const currentTenant = tenants.find((item) => item.id === currentTenantId)
 
-  const canCreate = useMemo(() => canCreateWorkspace(form), [form])
-  const canDeleteWorkspace = (workspaceId: string) =>
-    workspaces.find((item) => item.id === workspaceId)?.myRole === 'OWNER'
-  const currentWorkspace = workspaces.find(
-    (item) => item.id === currentWorkspaceId,
-  )
+  useEffect(() => {
+    if (tenants.length > 0 && !currentTenantId) {
+      selectTenant(tenants[0].id)
+    }
+  }, [currentTenantId, selectTenant, tenants])
 
-  const summaryCards = useMemo<WorkspaceSummaryItem[]>(() => {
-    const active = workspaces.filter((item) => item.status === 'active').length
-    const members = workspaces.reduce((sum, item) => sum + item.membersCount, 0)
-
-    return [
+  const summaryCards = useMemo<WorkspaceSummaryItem[]>(
+    () => [
       {
         icon: Building2,
         label: 'Workspace',
-        note: `${active} đang hoạt động`,
-        value: workspaces.length,
+        note: `${tenantPage?.total ?? tenants.length} workspace khả dụng`,
+        value: tenantPage?.total ?? tenants.length,
       },
-      {
-        icon: Users,
-        label: 'Thành viên',
-        note: 'Trên toàn bộ workspace',
-        value: members,
-      },
-    ]
-  }, [workspaces])
-
-  useEffect(() => {
-    if (!loadError) return
-
-    toast({
-      title: 'Không tải được workspace',
-      description: getApiErrorMessage(
-        loadError,
-        'Không tải được danh sách workspace.',
-      ),
-      variant: 'error',
-    })
-  }, [loadError, toast])
-
-  const handleCreateWorkspace = () => {
-    if (!canCreate || createMutation.isPending) return
-    createWorkspace(form)
-  }
+    ],
+    [tenantPage?.total, tenants.length],
+  )
 
   return (
     <div className="page-container">
@@ -96,40 +50,37 @@ export default function TenantsPage() {
             Workspaces
           </Typography.Title>
           <Typography.Text className="page-header__description">
-            Tạo, lựa chọn và quản lý các workspace của hệ thống.
+            Lựa chọn workspace để thay đổi ngữ cảnh làm việc của hệ thống.
           </Typography.Text>
-        </div>
-        <div className="page-header__actions">
-          <Button
-            type="primary"
-            icon={<Plus size={15} />}
-            onClick={() => setShowCreateModal(true)}
-          >
-            Tạo workspace
-          </Button>
         </div>
       </section>
 
-      {currentWorkspace ? (
+      {error ? (
+        <Alert
+          className="mb-5"
+          type="error"
+          showIcon
+          message="Không tải được danh sách workspace"
+          description="Vui lòng kiểm tra kết nối mạng hoặc thử lại sau."
+        />
+      ) : null}
+
+      {currentTenant ? (
         <SectionCard
           title="Workspace hiện tại"
-          description={`/${currentWorkspace.slug}`}
-          extra={
-            <Tag color="green">
-              {currentWorkspace.myRole ?? currentWorkspace.plan}
-            </Tag>
-          }
+          description={`/${currentTenant.slug}`}
+          extra={<Tag color="green">Đang sử dụng</Tag>}
           className="mb-5"
         >
           <div className="grid gap-4 md:grid-cols-3">
-            <CurrentWorkspaceItem label="Tên" value={currentWorkspace.name} />
+            <CurrentWorkspaceItem label="Tên" value={currentTenant.name} />
             <CurrentWorkspaceItem
-              label="Gói dịch vụ"
-              value={planLabel[currentWorkspace.plan]}
+              label="Slug"
+              value={currentTenant.slug}
             />
             <CurrentWorkspaceItem
-              label="Thành viên"
-              value={String(currentWorkspace.membersCount)}
+              label="Cấu hình"
+              value={currentTenant.settings || 'Chưa cấu hình'}
             />
           </div>
         </SectionCard>
@@ -140,27 +91,22 @@ export default function TenantsPage() {
       </div>
 
       <WorkspaceListSection
-        canDeleteWorkspace={canDeleteWorkspace}
-        currentWorkspaceId={currentWorkspaceId}
-        deletePending={deleteMutation.isPending}
-        isLoading={isLoading}
-        workspaces={workspaces}
-        onDeleteWorkspace={deleteWorkspace}
-        onSelectWorkspace={selectWorkspace}
+        currentWorkspaceId={currentTenantId}
+        isLoading={isFetching && tenants.length === 0}
+        workspaces={tenants}
+        onSelectWorkspace={(tenant) => selectTenant(tenant.id)}
       />
 
-      {showCreateModal ? (
-        <CreateWorkspaceModal
-          form={form}
-          submitting={createMutation.isPending}
-          canSubmit={canCreate}
-          onChange={setForm}
-          onClose={() => {
-            if (createMutation.isPending) return
-            setShowCreateModal(false)
-          }}
-          onSubmit={handleCreateWorkspace}
-        />
+      {(tenantPage?.total ?? 0) > query.limit ? (
+        <div className="mt-5 flex justify-end">
+          <Pagination
+            current={query.page}
+            pageSize={query.limit}
+            total={tenantPage?.total ?? 0}
+            showSizeChanger
+            onChange={onPaginationChange}
+          />
+        </div>
       ) : null}
     </div>
   )

@@ -1,20 +1,16 @@
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { useForm } from '@tanstack/react-form'
 import type { FieldApi } from '@tanstack/react-form'
+import { App } from 'antd'
 import { Mail, Lock, Eye, EyeOff } from '#/components/ui/icons'
-import { rules } from '#/lib/rules'
+import { useAuth } from '#/lib/hooks/useAuth'
 import {
   AuthBrand,
   AuthFooter,
   FieldWrapper,
   SubmitButton,
 } from '../AuthShared'
-import { authService } from '#/lib/services/auth.service'
-import { useAppDispatch } from '#/app/store/hooks'
-import { setSession } from '../authSlice'
-import { useToast } from '#/app/providers/ToastProvider'
-import { getAuthErrorFeedback } from '#/lib/helpers/auth-error-helper'
 
 interface LoginFields {
   email: string
@@ -24,24 +20,21 @@ interface LoginFields {
 
 export default function LoginPage() {
   const navigate = useNavigate()
-  const dispatch = useAppDispatch()
-  const { toast } = useToast()
-  const loginInFlight = useRef(false)
+  const { message } = App.useApp()
+  const { loginMutation } = useAuth()
   const [showPass, setShowPass] = useState(false)
 
   const form = useForm<LoginFields>({
     defaultValues: {
-      email: 'admin@gmail.com',
-      password: '123',
+      email: '',
+      password: '',
       remember: true,
     },
     onSubmit: async ({ value }: { value: LoginFields }) => {
-      if (loginInFlight.current) return
-      loginInFlight.current = true
       try {
-        const session = await authService.login(value)
-        dispatch(setSession(session))
-        navigate({ to: '/' })
+        const response = await loginMutation.mutateAsync(value)
+        message.success(response.message || 'Đăng nhập thành công')
+        navigate({ to: '/tenants' })
       } catch (error) {
         if (import.meta.env.DEV) {
           console.error('[auth/login] Login flow failed', {
@@ -50,20 +43,7 @@ export default function LoginPage() {
           })
         }
 
-        const feedback = getAuthErrorFeedback(error, 'login')
-
-        toast({
-          title: feedback.title,
-          description: feedback.description,
-          variant: feedback.variant,
-        })
-
-        if (feedback.shouldVerifyEmail) {
-          navigate({ to: '/verify-email', search: { email: value.email } })
-          return
-        }
-      } finally {
-        loginInFlight.current = false
+        message.error('Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.')
       }
     },
   })
@@ -93,7 +73,11 @@ export default function LoginPage() {
             <form.Field
               name="email"
               validators={{
-                onChange: ({ value }) => rules.loginEmail(value),
+                onChange: ({ value }) => {
+                  if (!value.trim()) return 'Vui lòng nhập email'
+                  if (!/^\S+@\S+\.\S+$/.test(value)) return 'Email không hợp lệ'
+                  return undefined
+                },
               }}
             >
               {(field: FieldApi<LoginFields, 'email'>) => (
@@ -117,7 +101,8 @@ export default function LoginPage() {
             <form.Field
               name="password"
               validators={{
-                onBlur: ({ value }) => rules.loginPassword(value),
+                onBlur: ({ value }) =>
+                  value ? undefined : 'Vui lòng nhập mật khẩu',
               }}
             >
               {(field: FieldApi<LoginFields, 'password'>) => (

@@ -2,17 +2,15 @@ import { useState } from 'react'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { useForm } from '@tanstack/react-form'
 import type { FieldApi } from '@tanstack/react-form'
+import { App } from 'antd'
 import { Mail, User, Lock, Eye, EyeOff } from '#/components/ui/icons'
-import { rules } from '#/lib/rules'
+import { useAuth } from '#/lib/hooks/useAuth'
 import {
   AuthBrand,
   AuthFooter,
   FieldWrapper,
   SubmitButton,
 } from '../AuthShared'
-import { authService } from '../../../lib/services/auth.service'
-import { useToast } from '#/app/providers/ToastProvider'
-import { getAuthErrorFeedback } from '../../../lib/helpers/auth-error-helper'
 
 interface RegisterFields {
   email: string
@@ -23,7 +21,8 @@ interface RegisterFields {
 
 export default function RegisterPage() {
   const navigate = useNavigate()
-  const { toast } = useToast()
+  const { message } = App.useApp()
+  const { registerMutation } = useAuth()
   const [showPass, setShowPass] = useState(false)
   const [showConfirm, setShowConfirm] = useState(false)
 
@@ -32,33 +31,22 @@ export default function RegisterPage() {
 
     onSubmit: async ({ value }: { value: RegisterFields }) => {
       try {
-        await authService.register({
+        const response = await registerMutation.mutateAsync({
           email: value.email,
           name: value.name,
           password: value.password,
         })
-        toast({
-          title: 'Đăng ký thành công',
-          description: 'Vui lòng kiểm tra email để nhập mã OTP xác thực.',
-          variant: 'success',
-        })
-        setTimeout(
-          () =>
-            navigate({ to: '/verify-email', search: { email: value.email } }),
-          900,
+        message.success(
+          response.message ||
+            response.data?.message ||
+            'Đăng ký thành công. Vui lòng kiểm tra email.',
         )
+        navigate({ to: '/verify-email', search: { email: value.email } })
       } catch (error) {
-        const feedback = getAuthErrorFeedback(error, 'register')
-
-        toast({
-          title: feedback.title,
-          description: feedback.description,
-          variant: feedback.variant,
-        })
-
-        if (feedback.shouldVerifyEmail) {
-          navigate({ to: '/verify-email', search: { email: value.email } })
+        if (import.meta.env.DEV) {
+          console.error('[auth/register] Register flow failed', error)
         }
+        message.error('Đăng ký thất bại. Vui lòng kiểm tra lại thông tin.')
       }
     },
   })
@@ -85,7 +73,11 @@ export default function RegisterPage() {
             <form.Field
               name="email"
               validators={{
-                onChange: ({ value }) => rules.registerEmail(value),
+                onChange: ({ value }) => {
+                  if (!value.trim()) return 'Vui lòng nhập email'
+                  if (!/^\S+@\S+\.\S+$/.test(value)) return 'Email không hợp lệ'
+                  return undefined
+                },
               }}
             >
               {(field: FieldApi<RegisterFields, 'email'>) => (
@@ -109,7 +101,8 @@ export default function RegisterPage() {
             <form.Field
               name="name"
               validators={{
-                onChange: ({ value }) => rules.name(value),
+                onChange: ({ value }) =>
+                  value.trim() ? undefined : 'Vui lòng nhập tên hiển thị',
               }}
             >
               {(field: FieldApi<RegisterFields, 'name'>) => (
@@ -133,7 +126,8 @@ export default function RegisterPage() {
             <form.Field
               name="password"
               validators={{
-                onChange: ({ value }) => rules.registerPassword(value),
+                onChange: ({ value }) =>
+                  value ? undefined : 'Vui lòng nhập mật khẩu',
               }}
             >
               {(field: FieldApi<RegisterFields, 'password'>) => (
@@ -164,10 +158,13 @@ export default function RegisterPage() {
             <form.Field
               name="confirmPassword"
               validators={{
-                onChange: ({ value }) =>
-                  rules.confirmPassword(() => form.getFieldValue('password'))(
-                    value,
-                  ),
+                onChange: ({ value }) => {
+                  if (!value) return 'Vui lòng nhập lại mật khẩu'
+                  if (value !== form.getFieldValue('password')) {
+                    return 'Mật khẩu nhập lại không khớp'
+                  }
+                  return undefined
+                },
               }}
             >
               {(field: FieldApi<RegisterFields, 'confirmPassword'>) => (

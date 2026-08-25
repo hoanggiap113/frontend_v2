@@ -1,12 +1,6 @@
-import { createFileRoute, redirect } from '@tanstack/react-router'
-import { hasStoredSession } from '#/lib/browser-storage'
-import SetupPage from '#/features/auth/pages/SetupPage'
+import { createFileRoute } from '@tanstack/react-router'
+import PlaceholderPage from '#/router/components/PlaceholderPage'
 
 export const Route = createFileRoute('/setup')({
-  beforeLoad: () => {
-    if (typeof window !== 'undefined' && hasStoredSession()) {
-      throw redirect({ to: '/' })
-    }
-  },
-  component: SetupPage,
+  component: () => <PlaceholderPage title="Thiết lập tài khoản" />,
 })

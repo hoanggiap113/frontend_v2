@@ -1,6 +1,6 @@
-import ChannelsPage from '#/features/channels/ChannelsPage'
+import PlaceholderPage from '#/router/components/PlaceholderPage'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_layout/channels/')({
-  component: ChannelsPage,
+  component: () => <PlaceholderPage title="Kênh chat" />,
 })

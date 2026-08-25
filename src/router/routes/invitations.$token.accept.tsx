@@ -1,14 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
-import AcceptInvitationPage from '#/features/invitations/AcceptInvitationPage'
+import PlaceholderPage from '#/router/components/PlaceholderPage'
 
 export const Route = createFileRoute('/invitations/$token/accept')({
-  beforeLoad: () => {
-    
-  },
-  component: InvitationAcceptRoute,
+  component: () => <PlaceholderPage title="Chấp nhận lời mời" />,
 })
-
-function InvitationAcceptRoute() {
-  const { token } = Route.useParams()
-  return <AcceptInvitationPage token={token} />
-}

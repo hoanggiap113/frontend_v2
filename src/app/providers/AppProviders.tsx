@@ -2,10 +2,10 @@ import type { ReactNode } from 'react'
 import { App as AntdApp, ConfigProvider } from 'antd'
 import type { ThemeConfig } from 'antd'
 import viVN from 'antd/locale/vi_VN'
-import { Provider as ReduxProvider } from 'react-redux'
-import { store } from '#/app/store/index'
-import { TanStackQueryProvider } from '#/app/query/queryClient'
-import { ToastProvider } from './ToastProvider'
+import { QueryClientProvider } from '@tanstack/react-query'
+import { queryClient } from '#/lib/config/queryClient'
+import GuardProvider from './GuardProvider'
+import TenantProvider from './TenantProvider'
 import 'antd/dist/reset.css'
 
 const theme: ThemeConfig = {
@@ -61,14 +61,14 @@ const theme: ThemeConfig = {
 
 export default function AppProviders({ children }: { children: ReactNode }) {
   return (
-    <ReduxProvider store={store}>
-      <TanStackQueryProvider>
-        <ConfigProvider locale={viVN} theme={theme}>
-          <AntdApp>
-            <ToastProvider>{children}</ToastProvider>
-          </AntdApp>
-        </ConfigProvider>
-      </TanStackQueryProvider>
-    </ReduxProvider>
+    <QueryClientProvider client={queryClient}>
+      <GuardProvider>
+        <TenantProvider>
+          <ConfigProvider locale={viVN} theme={theme}>
+            <AntdApp>{children}</AntdApp>
+          </ConfigProvider>
+        </TenantProvider>
+      </GuardProvider>
+    </QueryClientProvider>
   )
 }

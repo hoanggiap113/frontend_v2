@@ -1,4 +1,4 @@
-import ChannelDetailPage from '#/features/channels/ChannelDetailPage'
+import PlaceholderPage from '#/router/components/PlaceholderPage'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_layout/channels/$channelId')({
@@ -6,6 +6,5 @@ export const Route = createFileRoute('/_layout/channels/$channelId')({
 })
 
 function ChannelDetailComponent() {
-  const { channelId } = Route.useParams()
-  return <ChannelDetailPage channelId={channelId} />
+  return <PlaceholderPage title="Chi tiết kênh chat" />
 }

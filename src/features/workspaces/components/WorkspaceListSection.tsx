@@ -1,38 +1,19 @@
-import { Button, Popconfirm, Tag, Typography } from 'antd'
-import {
-  ArrowRight,
-  Building2,
-  CheckCircle2,
-  Trash2,
-} from '#/components/ui/icons'
+import { Button, Tag, Typography } from 'antd'
+import { ArrowRight, Building2, CheckCircle2 } from '#/components/ui/icons'
 import LoadingState from '#/components/ui/LoadingState'
 import { AppCard, EmptyState, SectionCard } from '#/components'
-import { formatDate } from '#/lib/helpers/datetime-helper'
-import type { Workspace } from '../../../lib/types/workspace'
-import { planLabel, statusLabel } from './tenantDisplay'
+import type { TenantResponse } from '#/lib/types/workspace'
 
 interface WorkspaceListSectionProps {
-  canDeleteWorkspace: (workspaceId: string) => boolean
-  currentWorkspaceId: string
-  deletePending: boolean
+  currentWorkspaceId: string | null
   isLoading: boolean
-  onDeleteWorkspace: (workspaceId: string) => void
-  onSelectWorkspace: (workspace: Workspace) => void
-  workspaces: Workspace[]
-}
-
-const statusColor: Record<Workspace['status'], string> = {
-  active: 'green',
-  trial: 'blue',
-  paused: 'gold',
+  onSelectWorkspace: (workspace: TenantResponse) => void
+  workspaces: TenantResponse[]
 }
 
 export function WorkspaceListSection({
-  canDeleteWorkspace,
   currentWorkspaceId,
-  deletePending,
   isLoading,
-  onDeleteWorkspace,
   onSelectWorkspace,
   workspaces,
 }: WorkspaceListSectionProps) {
@@ -52,7 +33,7 @@ export function WorkspaceListSection({
       {!isLoading && workspaces.length === 0 ? (
         <EmptyState
           title="Chưa có workspace"
-          description="Tạo workspace đầu tiên để bắt đầu thiết lập hệ thống."
+          description="Tài khoản hiện chưa thuộc workspace nào."
         />
       ) : null}
 
@@ -62,10 +43,7 @@ export function WorkspaceListSection({
             <WorkspaceCard
               key={workspace.id}
               active={workspace.id === currentWorkspaceId}
-              canDelete={canDeleteWorkspace(workspace.id)}
-              deleting={deletePending}
               workspace={workspace}
-              onDelete={() => onDeleteWorkspace(workspace.id)}
               onSelect={() => onSelectWorkspace(workspace)}
             />
           ))}
@@ -77,17 +55,11 @@ export function WorkspaceListSection({
 
 function WorkspaceCard({
   active,
-  canDelete,
-  deleting,
   workspace,
-  onDelete,
   onSelect,
 }: {
   active: boolean
-  canDelete: boolean
-  deleting: boolean
-  workspace: Workspace
-  onDelete: () => void
+  workspace: TenantResponse
   onSelect: () => void
 }) {
   return (
@@ -127,36 +99,15 @@ function WorkspaceCard({
           </div>
         </button>
 
-        <Tag color={statusColor[workspace.status]} bordered={false}>
-          {statusLabel[workspace.status]}
+        <Tag color={active ? 'green' : 'default'} bordered={false}>
+          {active ? 'Đang sử dụng' : 'Workspace'}
         </Tag>
       </div>
 
-      <div className="mt-4 rounded-lg bg-slate-50 p-3">
-        <div className="text-xs text-slate-400">Thành viên</div>
-        <div className="mt-1 font-bold text-slate-800">
-          {workspace.membersCount}
-        </div>
-      </div>
-
-      <div className="mt-4 rounded-lg border border-slate-100 bg-slate-50 p-3">
-        <div className="flex items-center justify-between gap-3">
-          <div>
-            <Typography.Text type="secondary" className="text-xs">
-              Gói dịch vụ
-            </Typography.Text>
-            <div className="mt-1 text-sm font-semibold text-slate-700">
-              {planLabel[workspace.plan]}
-              {workspace.myRole ? ` · ${workspace.myRole}` : ''}
-            </div>
-          </div>
-          <Typography.Text type="secondary" className="text-xs">
-            Tạo {formatDate(workspace.createdAt)}
-          </Typography.Text>
-        </div>
-      </div>
-
-      <div className="mt-4 flex items-center justify-between gap-3">
+      <div className="mt-4 flex items-center justify-between gap-3 border-t border-slate-100 pt-4">
+        <Typography.Text type="secondary" className="text-xs">
+          {workspace.settings ? 'Đã có cấu hình' : 'Chưa có cấu hình'}
+        </Typography.Text>
         <Button
           icon={!active ? <ArrowRight size={14} /> : undefined}
           disabled={active}
@@ -164,25 +115,6 @@ function WorkspaceCard({
         >
           {active ? 'Đang chọn' : 'Chọn workspace'}
         </Button>
-
-        <Popconfirm
-          title="Xóa workspace"
-          description={`Xóa workspace “${workspace.name}”? Thao tác này không thể hoàn tác.`}
-          okText="Xóa"
-          cancelText="Hủy"
-          okButtonProps={{ danger: true }}
-          disabled={!canDelete || deleting}
-          onConfirm={onDelete}
-        >
-          <Button
-            type="text"
-            danger
-            icon={<Trash2 size={14} />}
-            disabled={!canDelete || deleting}
-          >
-            Xóa
-          </Button>
-        </Popconfirm>
       </div>
     </AppCard>
   )

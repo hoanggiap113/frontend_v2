@@ -8,8 +8,3 @@ export type {
   ChatbotPendingApproval,
   ChatbotThread,
 } from './components/types'
-export {
-  chatbotLlmProviders,
-  chatbotModelOptions,
-  getLlmProviderLabel,
-} from './llmModels'

@@ -2,20 +2,22 @@ import { Link, useRouterState } from '@tanstack/react-router'
 import { Menu, Select, Tooltip, Typography } from 'antd'
 import type { MenuProps } from 'antd'
 import {
-  Bell, Bot, Building2, ClipboardList, DollarSign, Home, Mail,
-  MessageSquare, MessagesSquare, Plug, Users, Workflow,
+  Bell,
+  Bot,
+  Building2,
+  ClipboardList,
+  DollarSign,
+  Home,
+  Mail,
+  MessageSquare,
+  MessagesSquare,
+  Plug,
+  Users,
+  Workflow,
 } from '#/components/ui/icons'
-import { selectCurrentWorkspace, selectWorkspaces } from '#/app/store/index'
-import { useAppDispatch, useAppSelector } from '#/app/store/hooks'
-import { setCurrentWorkspaceId } from '#/features/workspaces'
+import type { TenantResponse } from '#/lib/types/workspace'
 
-interface NavigationItem {
-  to: string
-  label: string
-  icon: React.ReactNode
-}
-
-const navigationItems: NavigationItem[] = [
+const navigationItems = [
   { to: '/', label: 'Tổng quan', icon: <Home size={18} /> },
   { to: '/tenants', label: 'Workspaces', icon: <Building2 size={18} /> },
   { to: '/channels', label: 'Kênh chat', icon: <MessageSquare size={18} /> },
@@ -27,7 +29,7 @@ const navigationItems: NavigationItem[] = [
   { to: '/noti-history', label: 'Lịch sử thông báo', icon: <Bell size={18} /> },
   { to: '/mcp-connect', label: 'Kết nối MCP', icon: <Plug size={18} /> },
   { to: '/users', label: 'Người dùng', icon: <Users size={18} /> },
-]
+] as const
 
 function getSelectedKey(pathname: string) {
   return (
@@ -37,13 +39,24 @@ function getSelectedKey(pathname: string) {
   )
 }
 
-export default function Sidebar({ collapsed }: { collapsed: boolean }) {
-  const dispatch = useAppDispatch()
+interface SidebarProps {
+  collapsed: boolean
+  currentTenant?: TenantResponse
+  currentTenantId: string | null
+  onSelectTenant: (tenantId: string) => void
+  tenants: TenantResponse[]
+}
+
+export default function Sidebar({
+  collapsed,
+  currentTenant,
+  currentTenantId,
+  onSelectTenant,
+  tenants,
+}: SidebarProps) {
   const pathname = useRouterState({
     select: (state) => state.location.pathname,
   })
-  const workspaces = useAppSelector(selectWorkspaces)
-  const currentWorkspace = useAppSelector(selectCurrentWorkspace)
 
   const menuItems: MenuProps['items'] = navigationItems.map((item) => ({
     key: item.to,
@@ -78,11 +91,11 @@ export default function Sidebar({ collapsed }: { collapsed: boolean }) {
             WORKSPACE HIỆN TẠI
           </Typography.Text>
           <Select
-            value={currentWorkspace?.id}
-            onChange={(value) => dispatch(setCurrentWorkspaceId(value))}
-            options={workspaces.map((workspace) => ({
-              label: workspace.name,
-              value: workspace.id,
+            value={currentTenantId ?? undefined}
+            onChange={onSelectTenant}
+            options={tenants.map((tenant) => ({
+              label: tenant.name,
+              value: tenant.id,
             }))}
             placeholder="Chọn workspace"
             className="w-full"
@@ -100,22 +113,20 @@ export default function Sidebar({ collapsed }: { collapsed: boolean }) {
 
       <div className="app-sidebar__footer">
         <Tooltip
-          title={collapsed ? currentWorkspace?.name : undefined}
+          title={collapsed ? currentTenant?.name : undefined}
           placement="right"
         >
           <div className="app-sidebar__tenant-mark">
             <span>
-              {currentWorkspace?.name.slice(0, 2).toUpperCase() || 'NF'}
+              {currentTenant?.name.slice(0, 2).toUpperCase() || 'NF'}
             </span>
             {!collapsed ? (
               <div className="min-w-0">
                 <div className="truncate text-sm font-semibold text-slate-800">
-                  {currentWorkspace?.name || 'Chưa chọn workspace'}
+                  {currentTenant?.name || 'Chưa chọn workspace'}
                 </div>
                 <div className="text-xs text-slate-400">
-                  {currentWorkspace?.myRole ||
-                    currentWorkspace?.plan ||
-                    'Workspace'}
+                  Workspace
                 </div>
               </div>
             ) : null}

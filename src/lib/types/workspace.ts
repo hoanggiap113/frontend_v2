@@ -1,5 +1,10 @@
 export type TenantRole = 'OWNER' | 'ADMIN' | 'MEMBER'
 
+export type GetTenantsQuery = {
+  page: number
+  limit: number
+}
+
 export interface Workspace {
   id: string
   name: string
@@ -15,6 +20,5 @@ export interface TenantResponse {
   id: string
   name: string
   slug: string
-  myRole: TenantRole
-  createdAt: string
+  settings: string
 }

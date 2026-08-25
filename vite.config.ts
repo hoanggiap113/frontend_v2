@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite'
+import basicSsl from '@vitejs/plugin-basic-ssl'
 import react from '@vitejs/plugin-react'
 import { tanstackRouter } from '@tanstack/router-plugin/vite'
 import tsconfigPaths from 'vite-tsconfig-paths'
@@ -12,6 +13,7 @@ export default defineConfig({
     },
   },
   plugins: [
+    basicSsl(),
     tanstackRouter({
       target: 'react',
       autoCodeSplitting: true,

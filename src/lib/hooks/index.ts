@@ -1,1 +1,2 @@
-export * from './workspaces.queries'
+export * from './useAuth'
+export * from './useTenant'

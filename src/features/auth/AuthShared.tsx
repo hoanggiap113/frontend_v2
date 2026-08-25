@@ -1,7 +1,6 @@
-import type {ReactNode} from 'react';
+import type { ReactNode } from 'react'
 import { Bot } from '#/components/ui/icons'
 import { clsx } from 'clsx'
-import { getCurrentYear } from '#/lib/helpers/datetime-helper'
 
 export function AuthBrand() {
   return (
@@ -20,7 +19,7 @@ export function AuthBrand() {
 export function AuthFooter() {
   return (
     <p className="text-center text-xs text-slate-400 mt-6">
-      © {getCurrentYear()} AI Admin · Chat Quality Agent
+      © {new Date().getFullYear()} AI Admin · Chat Quality Agent
     </p>
   )
 }

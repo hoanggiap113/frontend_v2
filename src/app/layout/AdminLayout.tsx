@@ -1,65 +1,48 @@
-import { useEffect } from 'react'
-import { useQuery } from '@tanstack/react-query'
+import { useEffect, useState } from 'react'
+import { useRouterState } from '@tanstack/react-router'
 import Sidebar from './Sidebar'
 import Header from './Header'
-import { useRouteTitle } from '#/lib/useRouteTitle'
-import { useAppDispatch, useAppSelector } from '#/app/store/hooks'
-import {
-  selectAuthUser,
-  selectCurrentWorkspace,
-  selectCurrentWorkspaceId,
-  selectSidebarCollapsed,
-} from '#/app/store/index'
-import { setUser } from '#/features/auth'
-import { toggleSidebar } from '#/app/store/uiSlice'
-import { setCurrentWorkspaceId, setWorkspaces } from '#/features/workspaces'
-import { queryKeys } from '#/lib/config/query-keys'
-import { workspacesService } from '#/lib/services/workspaces.service'
+import { ROUTE_TITLES } from '#/constant'
+import { useCurrentTenant } from '#/app/providers/TenantProvider'
+import { useTenant } from '#/lib/hooks/useTenant'
 
 export default function AdminLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const dispatch = useAppDispatch()
-  const sidebarCollapsed = useAppSelector(selectSidebarCollapsed)
-  const pageTitle = useRouteTitle()
-  const currentWorkspaceId = useAppSelector(selectCurrentWorkspaceId)
-  const currentWorkspace = useAppSelector(selectCurrentWorkspace)
-  const authUser = useAppSelector(selectAuthUser)
-
-  const { data } = useQuery({
-    queryKey: queryKeys.workspaces,
-    queryFn: () => workspacesService.list(),
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
+  const pathname = useRouterState({
+    select: (state) => state.location.pathname,
   })
+  const { currentTenantId, selectTenant } = useCurrentTenant()
+  const { data: tenantPage } = useTenant({ page: 1, limit: 10 })
+  const tenants = tenantPage?.data ?? []
+  const currentTenant = tenants.find((tenant) => tenant.id === currentTenantId)
+  const pageTitle =
+    ROUTE_TITLES.find(({ match }) => match.test(pathname))?.title ??
+    'Chat Quality Agent'
 
   useEffect(() => {
-    if (!data) return
-    dispatch(setWorkspaces(data))
-    if (!currentWorkspaceId && data[0]) {
-      dispatch(setCurrentWorkspaceId(data[0].id))
+    if (!currentTenantId && tenants[0]) {
+      selectTenant(tenants[0].id)
     }
-  }, [currentWorkspaceId, data, dispatch])
-
-  useEffect(() => {
-    if (!authUser || !currentWorkspace?.myRole) return
-    if (authUser.role === currentWorkspace.myRole) return
-
-    dispatch(
-      setUser({
-        ...authUser,
-        role: currentWorkspace.myRole,
-      }),
-    )
-  }, [authUser, currentWorkspace?.myRole, dispatch])
+  }, [currentTenantId, selectTenant, tenants])
 
   return (
     <div className="app-shell">
-      <Sidebar collapsed={sidebarCollapsed} />
+      <Sidebar
+        collapsed={sidebarCollapsed}
+        currentTenant={currentTenant}
+        currentTenantId={currentTenantId}
+        tenants={tenants}
+        onSelectTenant={selectTenant}
+      />
       <div className="app-shell__main">
         <Header
-          onToggleSidebar={() => dispatch(toggleSidebar())}
+          currentTenant={currentTenant}
           pageTitle={pageTitle}
+          onToggleSidebar={() => setSidebarCollapsed((current) => !current)}
         />
         <main className="app-shell__content app-scrollbar">{children}</main>
       </div>

@@ -1,10 +1,13 @@
 import { Outlet, createRootRouteWithContext } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
-import TanStackQueryDevtools from '#/app/query/devtools'
-import type { RouterContext } from '../context'
+import type { QueryClient } from '@tanstack/react-query'
 import NotFoundPage from '../../components/errors/NotFoundPage'
 import InternalServerPage from '#/components/errors/InternalServerPage'
+
+export interface RouterContext {
+  queryClient: QueryClient
+}
 
 export const Route = createRootRouteWithContext<RouterContext>()({
   component: RootRoute,
@@ -23,7 +26,6 @@ function RootRoute() {
             name: 'TanStack Router',
             render: <TanStackRouterDevtoolsPanel />,
           },
-          TanStackQueryDevtools,
         ]}
       />
     </>
