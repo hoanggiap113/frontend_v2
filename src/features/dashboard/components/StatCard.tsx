@@ -1,11 +1,11 @@
 import { Tag, Typography } from 'antd'
 import { AppCard } from '#/components'
 import {
-  type AppIcon,
   Minus,
   TrendingDown,
   TrendingUp,
 } from '#/components/ui/icons'
+import type { AppIcon } from '#/components/ui/icons'
 
 interface MiniBarChartProps {
   data: number[]

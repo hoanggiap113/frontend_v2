@@ -127,21 +127,6 @@ export default function StepSchedule({ form, setFormValue }: JobStepBaseProps) {
         </div>
       </div>
 
-      {form.scheduleType === 'cron' && false && (
-        <label className="block max-w-md">
-          <FieldLabel>Cron expression</FieldLabel>
-          <TextInput
-            value={form.scheduleValue}
-            onChange={(scheduleValue) => setFormValue({ scheduleValue })}
-            placeholder="0 0 7 * * *"
-          />
-          <div className="mt-1 text-xs text-slate-400">
-            Cron gồm 6 trường. Ví dụ: 0 0 7 * * * nghĩa là
-            chạy mỗi ngày lúc 7h.
-          </div>
-        </label>
-      )}
-
       {form.scheduleType === 'cron' && (
         <CronScheduleBuilder
           cronConfig={cronConfig}

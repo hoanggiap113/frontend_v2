@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from '@tanstack/react-router'
+import { Button } from 'antd'
 import {
   AlertCircle,
   Lock,
@@ -7,12 +8,8 @@ import {
   ShieldCheck,
   User,
 } from '#/components/ui/icons'
-import {
-  AuthBrand,
-  AuthFooter,
-  FieldWrapper,
-  SubmitButton,
-} from '../AuthShared'
+import { FieldWrapper } from '#/components/auth/AuthFormControls'
+import { AuthLayout } from '#/components/auth/AuthLayout'
 import { authService } from '../../../lib/services/auth.service'
 import { useAppDispatch } from '#/app/store/hooks'
 import { setSession } from '../authSlice'
@@ -47,10 +44,8 @@ export default function SetupPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f0f4f8] flex flex-col items-center justify-center px-4">
-      <div className="w-full max-w-md">
-        <AuthBrand />
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
+    <AuthLayout>
+      <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
           <div className="mb-6 text-center">
             <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
               <ShieldCheck size={28} />
@@ -104,15 +99,17 @@ export default function SetupPage() {
                 onChange={(e) => setConfirmPassword(e.target.value)}
               />
             </FieldWrapper>
-            <SubmitButton
+            <Button
+              type="primary"
+              htmlType="submit"
               loading={loading}
-              label="Hoàn tất thiết lập"
-              loadingLabel="Đang tạo tài khoản..."
-            />
+              block
+              className="mt-2 !h-12 !rounded-xl !font-semibold"
+            >
+              {loading ? 'Đang tạo tài khoản...' : 'Hoàn tất thiết lập'}
+            </Button>
           </form>
-        </div>
-        <AuthFooter />
       </div>
-    </div>
+    </AuthLayout>
   )
 }

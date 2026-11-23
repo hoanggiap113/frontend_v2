@@ -3,12 +3,14 @@ import {
   Bot,
   MessageSquareText,
   Paperclip,
-  type AppIcon,
 } from '#/components/ui/icons'
+import type { AppIcon } from '#/components/ui/icons'
 import {
   buildBusinessMessageStats,
-  type MessageStatIconKey,
-  type MessageStatTone,
+} from '../../../lib/helpers/message-stats-helper'
+import type {
+  MessageStatIconKey,
+  MessageStatTone,
 } from '../../../lib/helpers/message-stats-helper'
 import type { ConversationItem } from '../../../lib/types/message'
 

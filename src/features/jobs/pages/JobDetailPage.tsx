@@ -15,15 +15,14 @@ import { channelsService } from '#/lib/services/channels.service'
 import { jobsService } from '../../../lib/services/jobs.service'
 import { queryKeys } from '#/lib/config/query-keys'
 import { JOB_STATUS_POLL_INTERVAL_MS } from '../../../lib/hooks/jobs.queries'
-import { selectCurrentWorkspaceId } from '#/app/store/index'
-import { useAppSelector } from '#/app/store/hooks'
+import { useCurrentTenant } from '#/app/providers/TenantProvider'
 import type { JobRunItem } from '../../../lib/types/job'
 
 export default function JobDetailPage({ jobId }: { jobId: string }) {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const { toast } = useToast()
-  const workspaceId = useAppSelector(selectCurrentWorkspaceId)
+  const { currentTenantId: workspaceId } = useCurrentTenant()
   const [selectedRun, setSelectedRun] = useState<JobRunItem | null>(null)
 
   const { data: job, error: jobError } = useQuery({

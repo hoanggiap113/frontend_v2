@@ -5,8 +5,8 @@ import {
   CheckCircle2,
   Info,
   X,
-  type AppIcon,
 } from '#/components/ui/icons'
+import type { AppIcon } from '#/components/ui/icons'
 import { clsx } from 'clsx'
 
 export type NotificationDialogType = 'info' | 'success' | 'warning' | 'danger'

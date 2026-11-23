@@ -1,6 +1,6 @@
 import axios from 'axios'
 import type { AxiosRequestConfig } from 'axios'
-import { appConfig } from './env'
+import { appConfig, isMockMode } from './env'
 
 export type ApiQuery = Record<string, unknown>
 
@@ -49,6 +49,24 @@ api.interceptors.request.use((config) => {
 
   return config
 })
+
+api.interceptors.response.use(
+  (response) => response,
+  (error: unknown) => {
+    if (
+      typeof window !== 'undefined' &&
+      !isMockMode() &&
+      axios.isAxiosError(error) &&
+      error.response?.status === 500 &&
+      window.location.pathname !== '/500'
+    ) {
+      const from = `${window.location.pathname}${window.location.search}${window.location.hash}`
+      window.location.replace(`/500?from=${encodeURIComponent(from)}`)
+    }
+
+    return Promise.reject(error)
+  },
+)
 
 // Config body và query string cho từng request
 export async function apiRequest<

@@ -1,5 +1,5 @@
 import { createRouter } from '@tanstack/react-router'
-import InternalServerPage from '../components/errors/InternalServerPage'
+import InternalServerRedirect from '../components/errors/InternalServerRedirect'
 import NotFoundPage from '../components/errors/NotFoundPage'
 import { queryClient } from '#/lib/config/queryClient'
 import { routeTree } from './routeTree.gen'
@@ -7,7 +7,7 @@ import { routeTree } from './routeTree.gen'
 export const router = createRouter({
   routeTree,
   context: { queryClient },
-  defaultErrorComponent: InternalServerPage,
+  defaultErrorComponent: InternalServerRedirect,
   defaultNotFoundComponent: NotFoundPage,
   defaultPreload: 'intent',
   scrollRestoration: true,

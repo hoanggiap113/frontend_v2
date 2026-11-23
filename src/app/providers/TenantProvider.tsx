@@ -39,7 +39,7 @@ export function useCurrentTenant() {
   const context = use(TenantContext)
 
   if (!context) {
-    throw new Error('useCurrentTenant phải được dùng bên trong TenantProvider.')
+    throw new Error('useCurrentTenant must be use in TenantProvider.')
   }
 
   return context

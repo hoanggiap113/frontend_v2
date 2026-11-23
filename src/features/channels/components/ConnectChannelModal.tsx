@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
-import { useForm, type FieldApi } from '@tanstack/react-form'
+import { useForm } from '@tanstack/react-form'
+import type { FieldApi } from '@tanstack/react-form'
 import { clsx } from 'clsx'
 import { ExternalLink, Info, X } from '#/components/ui/icons'
 import {

@@ -7,17 +7,17 @@ import {
   Tooltip,
   XAxis,
   YAxis,
-  type TooltipContentProps,
 } from 'recharts'
+import type { TooltipContentProps } from 'recharts'
 import { EmptyState, SectionCard } from '#/components'
 import { Activity, TrendingUp } from '#/components/ui/icons'
 import { formatDate } from '#/lib/helpers/datetime-helper'
 import type { ScoreTrendResponse } from '../../../lib/types/dashboard'
 
 function CustomTooltip({ active, payload, label }: TooltipContentProps<number, string>) {
-  if (!active || !payload?.length) return null
+  if (!active || payload.length === 0) return null
 
-  const point = payload[0]?.payload as ScoreTrendResponse['trend'][number]
+  const point = payload[0].payload as ScoreTrendResponse['trend'][number]
 
   return (
     <div className="rounded-lg bg-slate-800 px-3.5 py-2.5 text-xs text-white shadow-lg">

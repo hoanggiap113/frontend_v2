@@ -4,13 +4,12 @@ import { useToast } from '#/app/providers/ToastProvider'
 import JobForm from '../components/JobForm'
 import { getJobErrorMessage } from '../../../lib/helpers/job-error-helper'
 import { useCreateJobMutation } from '../../../lib/hooks/jobs.queries'
-import { selectCurrentWorkspaceId } from '#/app/store/index'
-import { useAppSelector } from '#/app/store/hooks'
+import { useCurrentTenant } from '#/app/providers/TenantProvider'
 
 export default function JobCreatePage() {
   const navigate = useNavigate()
   const { toast } = useToast()
-  const workspaceId = useAppSelector(selectCurrentWorkspaceId)
+  const { currentTenantId: workspaceId } = useCurrentTenant()
   const mutation = useCreateJobMutation(workspaceId)
 
   return (

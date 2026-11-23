@@ -16,8 +16,7 @@ import StepSchedule from './wizard/StepSchedule'
 import StepType from './wizard/StepType'
 import { channelsService } from '#/lib/services/channels.service'
 import { queryKeys } from '#/lib/config/query-keys'
-import { useAppSelector } from '#/app/store/hooks'
-import { selectCurrentWorkspaceId } from '#/app/store/index'
+import { useCurrentTenant } from '#/app/providers/TenantProvider'
 import type { JobUpsertPayload } from '../../../lib/types/job'
 import type { JobFormProps } from '../../../lib/types/job-form'
 
@@ -26,7 +25,7 @@ export default function JobForm({
   onSubmit,
   submitLabel,
 }: JobFormProps) {
-  const workspaceId = useAppSelector(selectCurrentWorkspaceId)
+  const { currentTenantId: workspaceId } = useCurrentTenant()
   const storageKey = useMemo(
     () =>
       `cqa_job_form:${workspaceId || 'default'}:${initialJob?.id ?? 'create'}`,
@@ -68,8 +67,8 @@ export default function JobForm({
     return ''
   }, [step])
 
-  function saveDraft(nextStep: number, nextForm: JobUpsertPayload) {
-    writeJobDraft(storageKey, { step: nextStep, form: nextForm })
+  function saveDraft(draftStep: number, nextForm: JobUpsertPayload) {
+    writeJobDraft(storageKey, { step: draftStep, form: nextForm })
   }
 
   function setFormValue(next: Partial<JobUpsertPayload>) {
@@ -80,8 +79,8 @@ export default function JobForm({
     })
   }
 
-  function goToStep(nextStep: number) {
-    const next = Math.min(Math.max(nextStep, 0), jobFormSteps.length - 1)
+  function goToStep(targetStep: number) {
+    const next = Math.min(Math.max(targetStep, 0), jobFormSteps.length - 1)
     setStep(next)
     saveDraft(next, form)
   }

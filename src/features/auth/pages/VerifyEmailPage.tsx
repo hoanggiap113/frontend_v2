@@ -9,7 +9,7 @@ import {
   ArrowRight,
   RotateCcw,
 } from '#/components/ui/icons'
-import { AuthBrand, AuthFooter } from '../AuthShared'
+import { AuthLayout } from '#/components/auth/AuthLayout'
 import { authService } from '../../../lib/services/auth.service'
 
 interface VerifyEmailFields {
@@ -98,10 +98,8 @@ export default function VerifyEmailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f0f4f8] flex flex-col items-center justify-center px-4 font-[Be_Vietnam_Pro,sans-serif]">
-      <div className="w-full max-w-md animate-in fade-in slide-in-from-bottom-4 duration-500">
-        <AuthBrand />
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
+    <AuthLayout>
+      <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
           <div className="mb-6 text-center">
             <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
               <Mail size={20} className="text-blue-500" />
@@ -208,10 +206,7 @@ export default function VerifyEmailPage() {
               Quay lại đăng ký
             </Link>
           </div>
-        </div>
-
-        <AuthFooter />
       </div>
-    </div>
+    </AuthLayout>
   )
 }

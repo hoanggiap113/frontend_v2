@@ -171,8 +171,10 @@ function InfoLine({ label, value }: { label: string; value: string }) {
 
 function parseRunSummary(summary: string): ParsedRunSummary | null {
   try {
-    const parsed = JSON.parse(summary) as ParsedRunSummary
-    return parsed && typeof parsed === 'object' ? parsed : null
+    const parsed: unknown = JSON.parse(summary)
+    return parsed !== null && typeof parsed === 'object'
+      ? parsed
+      : null
   } catch {
     return null
   }

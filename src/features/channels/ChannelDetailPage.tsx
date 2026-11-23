@@ -22,8 +22,7 @@ import { formatDateTime } from '#/lib/helpers/datetime-helper'
 import { getChannelErrorMessage } from '../../lib/helpers/channel-error-helper'
 import { channelsService } from '../../lib/services/channels.service'
 import { queryKeys } from '#/lib/config/query-keys'
-import { selectCurrentWorkspaceId } from '#/app/store/index'
-import { useAppSelector } from '#/app/store/hooks'
+import { useCurrentTenant } from '#/app/providers/TenantProvider'
 import type { ConnectChannelForm, SyncStatus } from '../../lib/types/channel'
 
 function InfoRow({
@@ -88,7 +87,7 @@ export default function ChannelDetailPage({
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const { toast } = useToast()
-  const workspaceId = useAppSelector(selectCurrentWorkspaceId)
+  const { currentTenantId: workspaceId } = useCurrentTenant()
   const [showDelete, setShowDelete] = useState(false)
   const [showEdit, setShowEdit] = useState(false)
 

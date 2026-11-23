@@ -7,7 +7,8 @@ import DashboardScoreTrend from './components/DashboardScoreTrend'
 import DashboardTagStats from './components/DashboardTagStats'
 import LoadingState from '#/components/ui/LoadingState'
 import RecentActivity from './components/RecentActivity'
-import StatCard, { type StatCardProps } from './components/StatCard'
+import StatCard from './components/StatCard'
+import type { StatCardProps } from './components/StatCard'
 import {
   formatCurrentFullDate,
   formatCurrentTime,
@@ -19,8 +20,7 @@ import type {
   OverviewResponse,
 } from '../../lib/types/dashboard'
 import { queryKeys } from '#/lib/config/query-keys'
-import { selectCurrentWorkspaceId } from '#/app/store/index'
-import { useAppSelector } from '#/app/store/hooks'
+import { useCurrentTenant } from '#/app/providers/TenantProvider'
 import {
   AlertCircle,
   CalendarDays,
@@ -103,7 +103,7 @@ function getRangeLabel(rangeKey: DashboardRangeKey, from: string, to: string) {
 
 export default function HomePage() {
   const navigate = useNavigate()
-  const workspaceId = useAppSelector(selectCurrentWorkspaceId)
+  const { currentTenantId: workspaceId } = useCurrentTenant()
   const useLiveDashboard = Boolean(workspaceId)
   const [rangeKey, setRangeKey] = useState<DashboardRangeKey>('30d')
   const [customFrom, setCustomFrom] = useState(() => getDateDaysAgo(30))

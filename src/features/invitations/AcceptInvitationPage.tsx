@@ -10,12 +10,9 @@ import {
   Mail,
   User,
 } from '#/components/ui/icons'
-import {
-  AuthBrand,
-  AuthFooter,
-  FieldWrapper,
-  setSession,
-} from '#/features/auth'
+import { FieldWrapper } from '#/components/auth/AuthFormControls'
+import { AuthLayout } from '#/components/auth/AuthLayout'
+import { setSession } from '#/features/auth'
 import { invitationsService } from '../../lib/services/invitations.service'
 import { useAppDispatch } from '#/app/store/hooks'
 import { formatDate } from '#/lib/helpers/datetime-helper'
@@ -97,11 +94,8 @@ export default function AcceptInvitationPage({
     (invitation?.accountExists || !passwordError)
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-[#f0f4f8] px-4 font-[Be_Vietnam_Pro,sans-serif]">
-      <div className="w-full max-w-md animate-in fade-in slide-in-from-bottom-4 duration-500">
-        <AuthBrand />
-
-        <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+    <AuthLayout>
+      <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
           <div className="mb-6 text-center">
             <h2 className="text-lg font-bold text-slate-800">
               Chấp nhận lời mời
@@ -234,10 +228,7 @@ export default function AcceptInvitationPage({
               </button>
             </div>
           ) : null}
-        </div>
-
-        <AuthFooter />
       </div>
-    </div>
+    </AuthLayout>
   )
 }

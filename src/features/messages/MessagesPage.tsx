@@ -7,16 +7,17 @@ import { MessageStatsCards } from './components/MessageStatsCards'
 import { SyncScoringNotice } from './components/SyncScoringNotice'
 import {
   filterConversations,
-  type MessageChannelFilter,
 } from '#/lib/helpers/message-helper'
+import type { MessageChannelFilter } from '#/lib/helpers/message-helper'
 import { formatNumber } from '#/lib/helpers/number-helper'
 import { useChannelsQuery } from '#/lib/hooks/channels.queries'
 import { useConversationsQuery } from '../../lib/hooks/messages.queries'
-import { selectCurrentWorkspaceId, selectGlobalSearch } from '#/app/store/index'
+import { selectGlobalSearch } from '#/app/store/index'
 import { useAppSelector } from '#/app/store/hooks'
+import { useCurrentTenant } from '#/app/providers/TenantProvider'
 
 export default function MessagesPage() {
-  const workspaceId = useAppSelector(selectCurrentWorkspaceId)
+  const { currentTenantId: workspaceId } = useCurrentTenant()
   const globalSearch = useAppSelector(selectGlobalSearch)
 
   const [selectedId, setSelectedId] = useState('')

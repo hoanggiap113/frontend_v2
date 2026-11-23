@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as R500RouteImport } from './routes/500'
 import { Route as LayoutRouteImport } from './routes/_layout'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as RegisterRouteImport } from './routes/register'
@@ -34,6 +35,11 @@ import { Route as LayoutJobsCreateRouteImport } from './routes/_layout/jobs.crea
 import { Route as InvitationsTokenAcceptRouteImport } from './routes/invitations.$token.accept'
 import { Route as LayoutJobsJobIdEditRouteImport } from './routes/_layout/jobs.$jobId.edit'
 
+const R500Route = R500RouteImport.update({
+  id: '/500',
+  path: '/500',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LayoutRoute = LayoutRouteImport.update({
   id: '/_layout',
   getParentRoute: () => rootRouteImport,
@@ -155,6 +161,7 @@ const LayoutJobsJobIdEditRoute = LayoutJobsJobIdEditRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
+  '/500': typeof R500Route
   '/': typeof LayoutIndexRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
@@ -180,6 +187,7 @@ export interface FileRoutesByFullPath {
   '/jobs/$jobId/edit': typeof LayoutJobsJobIdEditRoute
 }
 export interface FileRoutesByTo {
+  '/500': typeof R500Route
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/setup': typeof SetupRoute
@@ -206,6 +214,7 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/500': typeof R500Route
   '/_layout': typeof LayoutRouteWithChildren
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
@@ -234,6 +243,7 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
+    | '/500'
     | '/'
     | '/login'
     | '/register'
@@ -259,6 +269,7 @@ export interface FileRouteTypes {
     | '/jobs/$jobId/edit'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/500'
     | '/login'
     | '/register'
     | '/setup'
@@ -284,6 +295,7 @@ export interface FileRouteTypes {
     | '/jobs/$jobId/edit'
   id:
     | '__root__'
+    | '/500'
     | '/_layout'
     | '/login'
     | '/register'
@@ -311,6 +323,7 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  R500Route: typeof R500Route
   LayoutRoute: typeof LayoutRouteWithChildren
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
@@ -321,6 +334,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/500': {
+      id: '/500'
+      path: '/500'
+      fullPath: '/500'
+      preLoaderRoute: typeof R500RouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_layout': {
       id: '/_layout'
       path: ''
@@ -548,6 +568,7 @@ const LayoutRouteWithChildren =
   LayoutRoute._addFileChildren(LayoutRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
+  R500Route: R500Route,
   LayoutRoute: LayoutRouteWithChildren,
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,

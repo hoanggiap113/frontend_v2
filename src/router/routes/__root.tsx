@@ -3,7 +3,7 @@ import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 import type { QueryClient } from '@tanstack/react-query'
 import NotFoundPage from '../../components/errors/NotFoundPage'
-import InternalServerPage from '#/components/errors/InternalServerPage'
+import InternalServerRedirect from '#/components/errors/InternalServerRedirect'
 
 export interface RouterContext {
   queryClient: QueryClient
@@ -12,7 +12,7 @@ export interface RouterContext {
 export const Route = createRootRouteWithContext<RouterContext>()({
   component: RootRoute,
   notFoundComponent: NotFoundPage,
-  errorComponent: () => <InternalServerPage />,
+  errorComponent: InternalServerRedirect,
 })
 
 function RootRoute() {

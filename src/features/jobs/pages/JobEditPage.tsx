@@ -9,13 +9,12 @@ import {
   useJobDetailQuery,
   useUpdateJobMutation,
 } from '../../../lib/hooks/jobs.queries'
-import { selectCurrentWorkspaceId } from '#/app/store/index'
-import { useAppSelector } from '#/app/store/hooks'
+import { useCurrentTenant } from '#/app/providers/TenantProvider'
 
 export default function JobEditPage({ jobId }: { jobId: string }) {
   const navigate = useNavigate()
   const { toast } = useToast()
-  const workspaceId = useAppSelector(selectCurrentWorkspaceId)
+  const { currentTenantId: workspaceId } = useCurrentTenant()
   const { data: job, error: loadError } = useJobDetailQuery(workspaceId, jobId)
   const updateJobMutation = useUpdateJobMutation(workspaceId, jobId)
 

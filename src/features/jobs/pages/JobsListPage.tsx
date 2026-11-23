@@ -1,4 +1,5 @@
-import { useEffect, type ReactNode } from 'react'
+import { useEffect } from 'react'
+import type { ReactNode } from 'react'
 import { useQueries } from '@tanstack/react-query'
 import { Link } from '@tanstack/react-router'
 import { Typography } from 'antd'
@@ -26,8 +27,7 @@ import {
   JOB_STATUS_POLL_INTERVAL_MS,
   useJobsQuery,
 } from '../../../lib/hooks/jobs.queries'
-import { selectCurrentWorkspaceId } from '#/app/store/index'
-import { useAppSelector } from '#/app/store/hooks'
+import { useCurrentTenant } from '#/app/providers/TenantProvider'
 import type { JobItem, JobRunItem } from '../../../lib/types/job'
 
 const jobStatusLabel: Record<JobItem['status'], string> = {
@@ -68,7 +68,7 @@ function hasFinishedRun(run: JobRunItem | undefined, job: JobItem) {
 
 export default function JobsListPage() {
   const { toast } = useToast()
-  const workspaceId = useAppSelector(selectCurrentWorkspaceId)
+  const { currentTenantId: workspaceId } = useCurrentTenant()
   const {
     data: jobs = [],
     error: loadError,

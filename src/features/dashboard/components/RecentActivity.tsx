@@ -6,8 +6,8 @@ import {
   CheckCircle,
   Clock,
   LoaderCircle,
-  type AppIcon,
 } from '#/components/ui/icons'
+import type { AppIcon } from '#/components/ui/icons'
 import ScrollArea from '#/components/ui/ScrollArea'
 import { formatDateTime, formatDuration } from '#/lib/helpers/datetime-helper'
 import type { JobRunSummaryResponse } from '../../../lib/types/dashboard'
@@ -85,8 +85,10 @@ function parseRunSummary(summary: string | null): ParsedRunSummary | null {
   if (!summary) return null
 
   try {
-    const parsed = JSON.parse(summary) as ParsedRunSummary
-    return parsed && typeof parsed === 'object' ? parsed : null
+    const parsed: unknown = JSON.parse(summary)
+    return parsed !== null && typeof parsed === 'object'
+      ? parsed
+      : null
   } catch {
     return null
   }

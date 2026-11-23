@@ -19,9 +19,9 @@ import { usersService } from '../../lib/services/users.service'
 import { invitationsService } from '#/lib/services/invitations.service'
 import { useAppSelector } from '#/app/store/hooks'
 import {
-  selectCurrentWorkspaceId,
   selectCurrentWorkspaceRole,
 } from '#/app/store/index'
+import { useCurrentTenant } from '#/app/providers/TenantProvider'
 import {
   buildInvitationSuccessMessage,
   buildUserStats,
@@ -50,7 +50,7 @@ const statusColor: Record<string, string> = {
 
 export default function UsersPage() {
   const queryClient = useQueryClient()
-  const workspaceId = useAppSelector(selectCurrentWorkspaceId)
+  const { currentTenantId: workspaceId } = useCurrentTenant()
   const currentWorkspaceRole = useAppSelector(selectCurrentWorkspaceRole)
   const [inviteOpen, setInviteOpen] = useState(false)
   const [inviteForm, setInviteForm] = useState<{
