@@ -259,7 +259,7 @@ export default function ChannelDetailPage({
             <ChannelStatusBadge status={channel.status} />
           </InfoRow>
           <InfoRow label="Page / External ID">
-            <span className="font-mono text-xs text-slate-700">
+            <span className="text-xs text-slate-700">
               {channel.appId || 'Chưa có'}
             </span>
           </InfoRow>

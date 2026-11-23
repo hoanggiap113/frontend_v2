@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as R500RouteImport } from './routes/500'
 import { Route as LayoutRouteImport } from './routes/_layout'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as SetupRouteImport } from './routes/setup'
@@ -42,6 +43,11 @@ const R500Route = R500RouteImport.update({
 } as any)
 const LayoutRoute = LayoutRouteImport.update({
   id: '/_layout',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -163,6 +169,7 @@ const LayoutJobsJobIdEditRoute = LayoutJobsJobIdEditRouteImport.update({
 export interface FileRoutesByFullPath {
   '/500': typeof R500Route
   '/': typeof LayoutIndexRoute
+  '/auth': typeof AuthRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/setup': typeof SetupRoute
@@ -188,6 +195,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/500': typeof R500Route
+  '/auth': typeof AuthRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/setup': typeof SetupRoute
@@ -216,6 +224,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/500': typeof R500Route
   '/_layout': typeof LayoutRouteWithChildren
+  '/auth': typeof AuthRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/setup': typeof SetupRoute
@@ -245,6 +254,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/500'
     | '/'
+    | '/auth'
     | '/login'
     | '/register'
     | '/setup'
@@ -270,6 +280,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/500'
+    | '/auth'
     | '/login'
     | '/register'
     | '/setup'
@@ -297,6 +308,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/500'
     | '/_layout'
+    | '/auth'
     | '/login'
     | '/register'
     | '/setup'
@@ -325,6 +337,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   R500Route: typeof R500Route
   LayoutRoute: typeof LayoutRouteWithChildren
+  AuthRoute: typeof AuthRoute
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
   SetupRoute: typeof SetupRoute
@@ -346,6 +359,13 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof LayoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -570,6 +590,7 @@ const LayoutRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   R500Route: R500Route,
   LayoutRoute: LayoutRouteWithChildren,
+  AuthRoute: AuthRoute,
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
   SetupRoute: SetupRoute,

@@ -69,7 +69,7 @@ export default function MCPConnectionsPage() {
             </div>
             <div className="mt-4 rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-4">
               <div className="text-xs uppercase tracking-wide text-slate-400">Generated client secret</div>
-              <div className="mt-2 font-mono text-sm text-slate-700">{previewSecret}</div>
+              <div className="mt-2 text-sm text-slate-700">{previewSecret}</div>
               <button className="mt-4 inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50">
                 <Copy size={14} /> Copy secret
               </button>

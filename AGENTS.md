@@ -22,6 +22,8 @@ Read this file first, then load the reference guides relevant to the task.
   tooling, packages, environment configuration, or developer documentation.
 - [Anti-patterns](.agents/patterns/anti-pattern.md): coding constraints and
   review checks. Read before coding or reviewing any feature or code change.
+- [Code structure](.agents/patterns/code-structure.md): component and page
+  implementation patterns. Read when designing or structuring UI code.
 
 A task may require several guides. Read every guide relevant to the changed
 behavior, including downstream effects discovered during implementation.

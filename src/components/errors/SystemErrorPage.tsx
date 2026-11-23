@@ -119,11 +119,11 @@ export default function SystemErrorPage({
             <div className="relative text-center">
               <div
                 aria-hidden="true"
-                className={`absolute inset-0 translate-x-2 translate-y-2 font-[Fraunces] text-[clamp(7rem,22vw,14rem)] font-bold leading-none text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,0.12)] ${styles.text}`}
+                className={`absolute inset-0 translate-x-2 translate-y-2 text-[clamp(7rem,22vw,14rem)] font-bold leading-none text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,0.12)] ${styles.text}`}
               >
                 {code}
               </div>
-              <p className="relative font-[Fraunces] text-[clamp(7rem,22vw,14rem)] font-bold leading-none tracking-[-0.08em] text-white">
+              <p className="relative text-[clamp(7rem,22vw,14rem)] font-bold leading-none tracking-[-0.08em] text-white">
                 {code}
               </p>
               <div className="relative mx-auto mt-7 flex w-fit items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-bold uppercase tracking-[0.18em] text-slate-300">
@@ -144,7 +144,7 @@ export default function SystemErrorPage({
 
               <h1
                 id={`error-title-${code}`}
-                className="max-w-xl font-[Fraunces] text-4xl font-bold leading-[1.05] tracking-[-0.035em] text-slate-950 sm:text-5xl"
+                className="max-w-xl text-4xl font-bold leading-[1.05] tracking-[-0.035em] text-slate-950 sm:text-5xl"
               >
                 {title}
               </h1>

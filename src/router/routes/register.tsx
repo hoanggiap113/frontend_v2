@@ -1,220 +1,47 @@
 import { useState } from 'react'
-import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
-import { useForm } from '@tanstack/react-form'
-import type { FieldApi } from '@tanstack/react-form'
+import { createFileRoute, redirect, useNavigate } from '@tanstack/react-router'
 import { App, Button } from 'antd'
+import { Controller, useForm } from 'react-hook-form'
 import { Eye, EyeOff, Lock, Mail, User } from '#/components/ui/icons'
 import { FieldWrapper } from '#/components/auth/AuthFormControls'
-import { AuthLayout } from '#/components/auth/AuthLayout'
 import { useAuth } from '#/lib/hooks/useAuth'
 
-interface RegisterFields {
-  email: string
-  name: string
-  password: string
-  confirmPassword: string
-}
+interface RegisterFields { email: string; name: string; password: string; confirmPassword: string }
 
 export const Route = createFileRoute('/register')({
-  component: Component,
+  beforeLoad: ({ location }) => { throw redirect({ href: `/auth?mode=register${location.hash}` }) },
 })
 
-function Component() {
+export function RegisterForm() {
   const navigate = useNavigate()
   const { message } = App.useApp()
   const { registerMutation } = useAuth()
   const [showPass, setShowPass] = useState(false)
   const [showConfirm, setShowConfirm] = useState(false)
-
-  const form = useForm<RegisterFields>({
-    defaultValues: { email: '', name: '', password: '', confirmPassword: '' },
-
-    onSubmit: async ({ value }: { value: RegisterFields }) => {
-      try {
-        const response = await registerMutation.mutateAsync({
-          email: value.email,
-          name: value.name,
-          password: value.password,
-        })
-        message.success(
-          response.message ||
-            response.data?.message ||
-            'Đăng ký thành công. Vui lòng kiểm tra email.',
-        )
-        navigate({ to: '/verify-email', search: { email: value.email } })
-      } catch (error) {
-        if (import.meta.env.DEV) {
-          console.error('[auth/register] Register flow failed', error)
-        }
-        message.error('Đăng ký thất bại. Vui lòng kiểm tra lại thông tin.')
-      }
-    },
+  const { control, handleSubmit, getValues, formState: { errors, isSubmitting } } = useForm<RegisterFields>({
+    defaultValues: { email: '', name: '', password: '', confirmPassword: '' }, mode: 'onSubmit', reValidateMode: 'onBlur',
   })
 
+  const onSubmit = async (value: RegisterFields) => {
+    try {
+      const response = await registerMutation.mutateAsync({ email: value.email, name: value.name, password: value.password })
+      message.success(response.message || response.data?.message || 'Đăng ký thành công. Vui lòng kiểm tra email.')
+      navigate({ to: '/verify-email', search: { email: value.email } })
+    } catch (error) {
+      if (import.meta.env.DEV) console.error('[auth/register] Register flow failed', error)
+      message.error('Đăng ký thất bại. Vui lòng kiểm tra lại thông tin.')
+    }
+  }
+
   return (
-    <AuthLayout>
-      <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
-          <div className="mb-6 text-center">
-            <h2 className="text-lg font-bold text-slate-800">Tạo tài khoản</h2>
-            <p className="text-sm text-slate-500 mt-1">
-              Tạo tài khoản người dùng / quản trị viên
-            </p>
-          </div>
-
-          <form
-            className="space-y-4"
-            onSubmit={(e) => {
-              e.preventDefault()
-              form.handleSubmit()
-            }}
-          >
-            <form.Field
-              name="email"
-              validators={{
-                onChange: ({ value }) => {
-                  if (!value.trim()) return 'Vui lòng nhập email'
-                  if (!/^\S+@\S+\.\S+$/.test(value)) return 'Email không hợp lệ'
-                  return undefined
-                },
-              }}
-            >
-              {(field: FieldApi<RegisterFields, 'email'>) => (
-                <FieldWrapper
-                  label="Email"
-                  error={field.state.meta.errors[0]?.toString()}
-                >
-                  <Mail size={15} className="text-slate-400 shrink-0" />
-                  <input
-                    type="email"
-                    value={field.state.value}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    onBlur={field.handleBlur}
-                    autoComplete="email"
-                    className="flex-1 bg-transparent text-sm text-slate-700 outline-none"
-                  />
-                </FieldWrapper>
-              )}
-            </form.Field>
-
-            <form.Field
-              name="name"
-              validators={{
-                onChange: ({ value }) =>
-                  value.trim() ? undefined : 'Vui lòng nhập tên hiển thị',
-              }}
-            >
-              {(field: FieldApi<RegisterFields, 'name'>) => (
-                <FieldWrapper
-                  label="Tên hiển thị"
-                  error={field.state.meta.errors[0]?.toString()}
-                >
-                  <User size={15} className="text-slate-400 shrink-0" />
-                  <input
-                    type="text"
-                    value={field.state.value}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    onBlur={field.handleBlur}
-                    autoComplete="name"
-                    className="flex-1 bg-transparent text-sm text-slate-700 outline-none"
-                  />
-                </FieldWrapper>
-              )}
-            </form.Field>
-
-            <form.Field
-              name="password"
-              validators={{
-                onChange: ({ value }) =>
-                  value ? undefined : 'Vui lòng nhập mật khẩu',
-              }}
-            >
-              {(field: FieldApi<RegisterFields, 'password'>) => (
-                <FieldWrapper
-                  label="Mật khẩu"
-                  error={field.state.meta.errors[0]?.toString()}
-                >
-                  <Lock size={15} className="text-slate-400 shrink-0" />
-                  <input
-                    type={showPass ? 'text' : 'password'}
-                    value={field.state.value}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    onBlur={field.handleBlur}
-                    autoComplete="new-password"
-                    className="flex-1 bg-transparent text-sm text-slate-700 outline-none"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPass((v) => !v)}
-                    className="text-slate-400 hover:text-slate-600 transition-colors"
-                  >
-                    {showPass ? <EyeOff size={15} /> : <Eye size={15} />}
-                  </button>
-                </FieldWrapper>
-              )}
-            </form.Field>
-
-            <form.Field
-              name="confirmPassword"
-              validators={{
-                onChange: ({ value }) => {
-                  if (!value) return 'Vui lòng nhập lại mật khẩu'
-                  if (value !== form.getFieldValue('password')) {
-                    return 'Mật khẩu nhập lại không khớp'
-                  }
-                  return undefined
-                },
-              }}
-            >
-              {(field: FieldApi<RegisterFields, 'confirmPassword'>) => (
-                <FieldWrapper
-                  label="Nhập lại mật khẩu"
-                  error={field.state.meta.errors[0]?.toString()}
-                >
-                  <Lock size={15} className="text-slate-400 shrink-0" />
-                  <input
-                    type={showConfirm ? 'text' : 'password'}
-                    value={field.state.value}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    onBlur={field.handleBlur}
-                    autoComplete="new-password"
-                    className="flex-1 bg-transparent text-sm text-slate-700 outline-none"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowConfirm((v) => !v)}
-                    className="text-slate-400 hover:text-slate-600 transition-colors"
-                  >
-                    {showConfirm ? <EyeOff size={15} /> : <Eye size={15} />}
-                  </button>
-                </FieldWrapper>
-              )}
-            </form.Field>
-
-            <form.Subscribe selector={(s) => s.isSubmitting}>
-              {(isSubmitting) => (
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                  loading={isSubmitting}
-                  block
-                  className="mt-2 !h-12 !rounded-xl !font-semibold"
-                >
-                  {isSubmitting ? 'Đang xử lý...' : 'Tạo tài khoản'}
-                </Button>
-              )}
-            </form.Subscribe>
-          </form>
-
-          <p className="text-center text-sm text-slate-500 mt-5">
-            Đã có tài khoản?{' '}
-            <Link
-              to="/login"
-              className="text-emerald-600 font-semibold hover:text-emerald-700 transition-colors"
-            >
-              Đăng nhập
-            </Link>
-          </p>
-      </div>
-    </AuthLayout>
+    <div className="auth-form-card auth-form-card--scrollable">
+      <form className="space-y-4" onSubmit={handleSubmit(onSubmit)} noValidate>
+        <Controller name="email" control={control} rules={{ required: 'Vui lòng nhập email', pattern: { value: /^\S+@\S+\.\S+$/, message: 'Email không hợp lệ' } }} render={({ field }) => <FieldWrapper label="Email" error={errors.email?.message}><Mail size={15} className="shrink-0 text-slate-400" /><input {...field} type="email" autoComplete="email" placeholder="Email của bạn" className="flex-1 bg-transparent text-sm text-slate-700 outline-none placeholder:text-slate-400" /></FieldWrapper>} />
+        <Controller name="name" control={control} rules={{ required: 'Vui lòng nhập tên hiển thị' }} render={({ field }) => <FieldWrapper label="Tên hiển thị" error={errors.name?.message}><User size={15} className="shrink-0 text-slate-400" /><input {...field} autoComplete="name" placeholder="Tên của bạn" className="flex-1 bg-transparent text-sm text-slate-700 outline-none placeholder:text-slate-400" /></FieldWrapper>} />
+        <Controller name="password" control={control} rules={{ required: 'Vui lòng nhập mật khẩu' }} render={({ field }) => <FieldWrapper label="Mật khẩu" error={errors.password?.message}><Lock size={15} className="shrink-0 text-slate-400" /><input {...field} type={showPass ? 'text' : 'password'} autoComplete="new-password" className="flex-1 bg-transparent text-sm text-slate-700 outline-none" /><button type="button" onClick={() => setShowPass((visible) => !visible)} aria-label={showPass ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'} className="text-slate-400">{showPass ? <EyeOff size={15} /> : <Eye size={15} />}</button></FieldWrapper>} />
+        <Controller name="confirmPassword" control={control} rules={{ required: 'Vui lòng nhập lại mật khẩu', validate: (value) => value === getValues('password') || 'Mật khẩu nhập lại không khớp' }} render={({ field }) => <FieldWrapper label="Nhập lại mật khẩu" error={errors.confirmPassword?.message}><Lock size={15} className="shrink-0 text-slate-400" /><input {...field} type={showConfirm ? 'text' : 'password'} autoComplete="new-password" className="flex-1 bg-transparent text-sm text-slate-700 outline-none" /><button type="button" onClick={() => setShowConfirm((visible) => !visible)} aria-label={showConfirm ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'} className="text-slate-400">{showConfirm ? <EyeOff size={15} /> : <Eye size={15} />}</button></FieldWrapper>} />
+        <Button type="primary" htmlType="submit" loading={isSubmitting} block className="mt-2 !h-12 !rounded-xl !font-semibold">{isSubmitting ? 'Đang xử lý...' : 'Tạo tài khoản'}</Button>
+      </form>
+    </div>
   )
 }

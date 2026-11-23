@@ -24,8 +24,8 @@ const theme: ThemeConfig = {
     borderRadiusLG: 10,
     borderRadiusSM: 6,
     controlHeight: 40,
-    fontFamily:
-      "Manrope, Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+    fontFamily: 'var(--font-sans)',
+    fontFamilyCode: 'var(--font-sans)',
     boxShadowSecondary: '0 12px 32px rgba(16, 24, 40, 0.10)',
   },
   components: {

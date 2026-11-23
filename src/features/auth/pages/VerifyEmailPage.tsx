@@ -169,7 +169,7 @@ export default function VerifyEmailPage() {
                         field.handleChange(val)
                       }}
                       onBlur={field.handleBlur}
-                      className="flex-1 bg-transparent text-2xl text-center text-slate-700 outline-none font-mono tracking-widest"
+                      className="flex-1 bg-transparent text-2xl text-center text-slate-700 outline-none tracking-widest"
                     />
                   </div>
                   {field.state.meta.errors[0] && (

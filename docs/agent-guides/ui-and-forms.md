@@ -4,7 +4,9 @@
 
 - Forms should support Enter-to-submit when the focused field belongs to the
   main submit flow.
-- Prefer native form semantics and the component library's submit mechanism.
+- Use React Hook Form for new forms and Ant Design for field controls. Keep
+  native form submission semantics and use the same `handleSubmit` flow for
+  keyboard and button submission.
 - If a custom input, modal, or wizard footer intercepts keyboard events, wire
   Enter explicitly to the same validated submit path used by the primary button.
 - Preserve validation, disabled, and loading guards for keyboard submission.
@@ -32,6 +34,9 @@
   [the anti-pattern guide](../../.agents/patterns/anti-pattern.md).
 - Use standard controls for standard interactions: buttons, menus, tabs, forms,
   switches, segmented controls, sliders, and dialogs.
+- Use Ant Design for cards, tabs, layout, grids, flex alignment, and typography.
+  See [code structure](../../.agents/patterns/code-structure.md) for the component
+  mapping and form integration rules.
 - Do not create a marketing landing page when the requested output is an app,
   dashboard, tool, or workflow screen.
 - Keep layouts responsive across mobile and desktop.
@@ -59,9 +64,9 @@
 
 ## Styling
 
-- Follow the existing styling approach: CSS Modules, SCSS Modules, Tailwind,
-  CSS-in-JS, or component-library styling.
-- Prefer local component styles over broad global overrides.
+- Reuse the class structure and tokens in `src/styles.css`. Prefer Ant Design
+  props and theme tokens before overriding its rendered CSS classes. Put any
+  needed CSS overrides in `src/styles.css` under a project-owned scope class.
 - Keep class names semantic and scoped.
 - Avoid hardcoded one-off colors when design tokens or theme variables exist.
 - Use stable dimensions for fixed-format UI elements such as toolbars, icon
@@ -81,7 +86,7 @@
 - Use `alt=""` and `aria-hidden="true"` for decorative images.
 - Do not redraw complex icons in CSS when a valid asset exists.
 - When using component libraries inside a Figma-restored screen, account for
-  library default padding, line height, and internal DOM. Prefer scoped
-  component-local overrides over global library selectors.
+  library default padding, line height, and internal DOM. Scope any overrides
+  in `src/styles.css` to the affected page or component.
 - Verify at the target desktop width and at least one narrow width before
   finishing UI-heavy work.

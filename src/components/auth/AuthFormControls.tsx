@@ -7,6 +7,7 @@ interface FieldWrapperProps {
   hasError?: boolean
   children: ReactNode
   extra?: ReactNode
+  className?: string
 }
 
 export function FieldWrapper({
@@ -15,9 +16,10 @@ export function FieldWrapper({
   hasError,
   children,
   extra,
+  className,
 }: FieldWrapperProps) {
   return (
-    <div>
+    <div className={clsx('auth-field-wrapper', className)}>
       <div className="mb-1.5 flex items-center justify-between">
         <label className="block text-xs font-semibold uppercase tracking-wide text-slate-600">
           {label}
@@ -28,7 +30,7 @@ export function FieldWrapper({
       <div
         className={clsx(
           'flex items-center gap-3 rounded-xl border bg-slate-50 px-4 py-3 transition-all',
-          'focus-within:border-emerald-400 focus-within:bg-white focus-within:ring-3 focus-within:ring-emerald-100',
+          'focus-within:border-blue-400 focus-within:bg-white focus-within:ring-3 focus-within:ring-blue-100',
           hasError || error ? 'border-red-300 bg-red-50' : 'border-slate-200',
         )}
       >

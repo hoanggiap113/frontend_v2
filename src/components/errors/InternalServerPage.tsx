@@ -40,7 +40,7 @@ export default function InternalServerPage() {
         <div className="relative mx-auto flex w-full max-w-sm items-center justify-center md:justify-end">
           <div
             aria-hidden="true"
-            className="font-[Manrope] text-[clamp(9rem,25vw,17rem)] font-extrabold leading-none tracking-[-0.1em] text-emerald-950/[0.06]"
+            className="text-[clamp(9rem,25vw,17rem)] font-extrabold leading-none tracking-[-0.1em] text-emerald-950/[0.06]"
           >
             500
           </div>
