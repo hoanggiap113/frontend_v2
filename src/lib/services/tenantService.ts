@@ -4,6 +4,8 @@ import type {
   GetTenantsQuery,
   TenantResponse,
 } from '#/lib/types/workspace'
+import { isMockMode } from '#/lib/config/env'
+import { getMockTenants } from './mocks/mockTenants'
 
 const TENANT_ENDPOINTS = {
   list: '/tenants',
@@ -11,6 +13,8 @@ const TENANT_ENDPOINTS = {
 
 export const tenantService = {
   async getTenants(query: GetTenantsQuery) {
+    if (isMockMode()) return getMockTenants(query)
+
     const response = await apiRequest<
       ApiResponse<PageResponse<TenantResponse>>,
       never,

@@ -1,7 +1,6 @@
-import { createFileRoute, redirect } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
+import PlaceholderPage from '#/router/components/PlaceholderPage'
 
 export const Route = createFileRoute('/_layout/')({
-  beforeLoad: () => {
-    throw redirect({ to: '/tenants' })
-  },
+  component: () => <PlaceholderPage title="Tổng quan" />,
 })

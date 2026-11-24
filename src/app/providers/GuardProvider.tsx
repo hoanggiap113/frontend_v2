@@ -3,6 +3,7 @@ import type { ReactNode } from 'react'
 import type { AxiosError, InternalAxiosRequestConfig } from 'axios'
 import { api, setApiBearerToken } from '#/lib/config/api'
 import { authService } from '#/lib/services/authService'
+import { clearStoredTenant } from './TenantProvider'
 
 type RetryableRequestConfig = InternalAxiosRequestConfig & {
   _authRetry?: boolean
@@ -15,20 +16,8 @@ const AUTH_REQUESTS = [
   '/auth/logout',
 ]
 
-let refreshRequest: ReturnType<typeof authService.refreshToken> | null = null
-
 function isAuthRequest(url = '') {
   return AUTH_REQUESTS.some((endpoint) => url.includes(endpoint))
-}
-
-function requestNewAccessToken() {
-  if (!refreshRequest) {
-    refreshRequest = authService.refreshToken().finally(() => {
-      refreshRequest = null
-    })
-  }
-
-  return refreshRequest
 }
 
 export default function GuardProvider({ children }: { children: ReactNode }) {
@@ -50,11 +39,12 @@ export default function GuardProvider({ children }: { children: ReactNode }) {
         request._authRetry = true
 
         try {
-          await requestNewAccessToken()
+          const response = await authService.refreshToken()
+          if (!response.success) throw new Error('Session refresh failed.')
           return api.request(request)
         } catch (refreshError) {
-          // Refresh token đã hết hạn hoặc không còn hợp lệ.
           setApiBearerToken(null)
+          clearStoredTenant()
 
           if (
             typeof window !== 'undefined' &&

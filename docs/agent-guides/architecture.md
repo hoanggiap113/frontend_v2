@@ -96,6 +96,8 @@ child component, then add the new behavior there.
 - When the project has no convention, prefer `XxxPage.tsx` for route screens,
   `XxxLayout.tsx` for layouts, `useXxx.ts` for hooks, `xxxApi.ts` for API
   modules, `xxxStore.ts` for stores, and `xxx.types.ts` for shared types.
+- Prefer short domain names and avoid redundant purpose qualifiers. For example,
+  use `WorkspacePage` instead of `WorkspacePickerPage`.
 - Keep feature-internal helpers private to the feature directory.
 - Use `index.ts` barrel files only for stable public exports. Do not export
   internal helpers, test fixtures, or implementation details through a public

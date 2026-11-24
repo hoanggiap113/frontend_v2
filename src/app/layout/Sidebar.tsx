@@ -1,10 +1,9 @@
 import { Link, useRouterState } from '@tanstack/react-router'
-import { Menu, Select, Tooltip, Typography } from 'antd'
+import { Menu, Tooltip, Typography } from 'antd'
 import type { MenuProps } from 'antd'
 import {
   Bell,
   Bot,
-  Building2,
   ClipboardList,
   DollarSign,
   Home,
@@ -15,11 +14,9 @@ import {
   Users,
   Workflow,
 } from '#/components/ui/icons'
-import type { TenantResponse } from '#/lib/types/workspace'
 
 const navigationItems = [
   { to: '/', label: 'Tổng quan', icon: <Home size={18} /> },
-  { to: '/tenants', label: 'Workspaces', icon: <Building2 size={18} /> },
   { to: '/channels', label: 'Kênh chat', icon: <MessageSquare size={18} /> },
   { to: '/messages', label: 'Tin nhắn', icon: <Mail size={18} /> },
   { to: '/chatbot', label: 'Chatbot', icon: <MessagesSquare size={18} /> },
@@ -41,18 +38,12 @@ function getSelectedKey(pathname: string) {
 
 interface SidebarProps {
   collapsed: boolean
-  currentTenant?: TenantResponse
-  currentTenantId: string | null
-  onSelectTenant: (tenantId: string) => void
-  tenants: TenantResponse[]
+  currentTenant: { name: string } | null
 }
 
 export default function Sidebar({
   collapsed,
   currentTenant,
-  currentTenantId,
-  onSelectTenant,
-  tenants,
 }: SidebarProps) {
   const pathname = useRouterState({
     select: (state) => state.location.pathname,
@@ -84,24 +75,6 @@ export default function Sidebar({
           </div>
         ) : null}
       </div>
-
-      {!collapsed ? (
-        <div className="app-sidebar__workspace">
-          <Typography.Text className="app-sidebar__label">
-            WORKSPACE HIỆN TẠI
-          </Typography.Text>
-          <Select
-            value={currentTenantId ?? undefined}
-            onChange={onSelectTenant}
-            options={tenants.map((tenant) => ({
-              label: tenant.name,
-              value: tenant.id,
-            }))}
-            placeholder="Chọn workspace"
-            className="w-full"
-          />
-        </div>
-      ) : null}
 
       <Menu
         mode="inline"

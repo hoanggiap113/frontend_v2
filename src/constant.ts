@@ -27,7 +27,6 @@ export const LEGACY_AGENT_KEYS = [
 
 export const ROUTE_TITLES: Array<{ match: RegExp; title: string }> = [
   { match: /^\/$/, title: 'Trang chủ' },
-  { match: /^\/tenants$/, title: 'Workspaces' },
   { match: /^\/channels(?:\/[^/]+)?$/, title: 'Kênh chat' },
   { match: /^\/messages$/, title: 'Tin nhắn' },
   { match: /^\/chatbot$/, title: 'Chatbot' },

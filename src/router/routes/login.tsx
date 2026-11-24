@@ -1,10 +1,15 @@
 import { useState } from 'react'
 import { createFileRoute, redirect, useNavigate } from '@tanstack/react-router'
+import { useQueryClient } from '@tanstack/react-query'
 import { App, Button } from 'antd'
 import { Controller, useForm } from 'react-hook-form'
 import { Eye, EyeOff, Lock, Mail } from '#/components/ui/icons'
 import { FieldWrapper } from '#/components/auth/AuthFormControls'
 import { useAuth } from '#/lib/hooks/useAuth'
+import { useCurrentTenant } from '#/app/providers/TenantProvider'
+import { sessionQueryKey } from '../requireSession'
+import { isMockMode } from '#/lib/config/env'
+import { MOCK_ADMIN_CREDENTIALS } from '#/lib/services/mocks/mockAuth'
 
 interface LoginFields {
   email: string
@@ -20,11 +25,16 @@ export const Route = createFileRoute('/login')({
 
 export function LoginForm() {
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
+  const { selectTenant } = useCurrentTenant()
   const { message } = App.useApp()
   const { loginMutation } = useAuth()
   const [showPass, setShowPass] = useState(false)
   const { control, handleSubmit, formState: { errors, isSubmitting } } = useForm<LoginFields>({
-    defaultValues: { email: '', password: '', remember: true },
+    defaultValues: {
+      ...(isMockMode() ? MOCK_ADMIN_CREDENTIALS : { email: '', password: '' }),
+      remember: true,
+    },
     mode: 'onSubmit',
     reValidateMode: 'onBlur',
   })
@@ -32,8 +42,15 @@ export function LoginForm() {
   const onSubmit = async (value: LoginFields) => {
     try {
       const response = await loginMutation.mutateAsync(value)
+      if (!response.success) {
+        message.error(response.message || 'Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.')
+        return
+      }
+      selectTenant(null)
+      queryClient.clear()
+      queryClient.setQueryData(sessionQueryKey, true)
       message.success(response.message || 'Đăng nhập thành công')
-      navigate({ to: '/tenants' })
+      navigate({ to: '/tenants', replace: true })
     } catch (error) {
       if (import.meta.env.DEV) console.error('[auth/login] Login flow failed', { email: value.email, error })
       message.error('Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.')
@@ -43,6 +60,11 @@ export function LoginForm() {
   return (
     <div className="auth-form-card">
       <form className="space-y-4" onSubmit={handleSubmit(onSubmit)} noValidate>
+        {isMockMode() ? (
+          <p className="rounded-lg bg-slate-50 px-3 py-2 text-xs text-slate-600">
+            Tài khoản admin demo đã điền sẵn. Email: {MOCK_ADMIN_CREDENTIALS.email}. Mật khẩu: {MOCK_ADMIN_CREDENTIALS.password}.
+          </p>
+        ) : null}
         <Controller name="email" control={control} rules={{ required: 'Vui lòng nhập email', pattern: { value: /^\S+@\S+\.\S+$/, message: 'Email không hợp lệ' } }} render={({ field }) => (
           <FieldWrapper label="Email" error={errors.email?.message}><Mail size={15} className="shrink-0 text-slate-400" /><input {...field} type="email" autoComplete="email" placeholder="Email / SĐT / Tên người dùng" className="flex-1 bg-transparent text-sm text-slate-700 outline-none placeholder:text-slate-400" /></FieldWrapper>
         )} />

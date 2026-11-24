@@ -1,121 +1,73 @@
-import { Button, Tag, Typography } from 'antd'
-import { ArrowRight, Building2, CheckCircle2 } from '#/components/ui/icons'
-import LoadingState from '#/components/ui/LoadingState'
-import { AppCard, EmptyState, SectionCard } from '#/components'
+import { Button, Col, Flex, Row, Tag, Typography } from 'antd'
+import { ArrowRight, Building2, Plus } from '#/components/ui/icons'
 import type { TenantResponse } from '#/lib/types/workspace'
 
 interface WorkspaceListSectionProps {
-  currentWorkspaceId: string | null
-  isLoading: boolean
   onSelectWorkspace: (workspace: TenantResponse) => void
+  onCreateWorkspace: () => void
   workspaces: TenantResponse[]
+  recentWorkspaceId: string | null
+  showCreateTile: boolean
 }
 
 export function WorkspaceListSection({
-  currentWorkspaceId,
-  isLoading,
   onSelectWorkspace,
+  onCreateWorkspace,
   workspaces,
+  recentWorkspaceId,
+  showCreateTile,
 }: WorkspaceListSectionProps) {
   return (
-    <SectionCard
-      title="Danh sách workspace"
-      description="Chọn workspace để chuyển ngữ cảnh làm việc trong toàn bộ hệ thống."
-      extra={<Tag bordered={false}>{workspaces.length} workspace</Tag>}
-    >
-      {isLoading ? (
-        <LoadingState
-          title="Đang tải workspace"
-          description="Danh sách workspace sẽ xuất hiện sau khi tải xong."
-        />
-      ) : null}
-
-      {!isLoading && workspaces.length === 0 ? (
-        <EmptyState
-          title="Chưa có workspace"
-          description="Tài khoản hiện chưa thuộc workspace nào."
-        />
-      ) : null}
-
-      {!isLoading && workspaces.length > 0 ? (
-        <div className="grid gap-4 lg:grid-cols-2 2xl:grid-cols-3">
-          {workspaces.map((workspace) => (
-            <WorkspaceCard
-              key={workspace.id}
-              active={workspace.id === currentWorkspaceId}
-              workspace={workspace}
-              onSelect={() => onSelectWorkspace(workspace)}
-            />
-          ))}
-        </div>
-      ) : null}
-    </SectionCard>
-  )
-}
-
-function WorkspaceCard({
-  active,
-  workspace,
-  onSelect,
-}: {
-  active: boolean
-  workspace: TenantResponse
-  onSelect: () => void
-}) {
-  return (
-    <AppCard
-      className={active ? 'border-emerald-300 ring-2 ring-emerald-50' : ''}
-      styles={{ body: { padding: 18 } }}
-    >
-      <div className="flex items-start justify-between gap-3">
-        <button
-          type="button"
-          onClick={() => {
-            if (!active) onSelect()
-          }}
-          className="flex min-w-0 flex-1 items-start gap-3 text-left"
-        >
-          <div
-            className={`grid size-11 shrink-0 place-items-center rounded-lg ${
-              active
-                ? 'bg-emerald-600 text-white'
-                : 'bg-slate-100 text-slate-500'
-            }`}
+    <Row gutter={[16, 16]} className="workspace-picker__grid">
+      {workspaces.map((workspace) => (
+        <Col key={workspace.id} xs={24} sm={12}>
+          <Button
+            block
+            className="workspace-picker__tile"
+            onClick={() => onSelectWorkspace(workspace)}
           >
-            <Building2 size={20} />
-          </div>
-          <div className="min-w-0">
-            <div className="flex items-center gap-2">
-              <Typography.Text strong className="truncate text-base">
-                {workspace.name}
+            <span className="workspace-picker__tile-icon">
+              <Building2 size={24} aria-hidden="true" />
+            </span>
+            <Flex vertical gap={4} className="min-w-0 flex-1 text-left">
+              <Flex align="center" gap={8} className="min-w-0">
+                <Typography.Text ellipsis strong>{workspace.name}</Typography.Text>
+                {workspace.myRole ? (
+                  <Tag className="workspace-picker__role" color={workspace.myRole === 'MEMBER' ? 'default' : 'blue'}>
+                    {workspace.myRole === 'MEMBER' ? 'Thành viên' : 'Quản trị viên'}
+                  </Tag>
+                ) : null}
+              </Flex>
+              <Typography.Text ellipsis type="secondary" className="text-xs">
+                /{workspace.slug}
               </Typography.Text>
-              {active ? (
-                <CheckCircle2 size={15} className="shrink-0 text-emerald-600" />
+              {workspace.channelsCount !== undefined || workspace.unreadMessagesCount !== undefined ? (
+                <Typography.Text type="secondary" className="workspace-picker__stats">
+                  {workspace.channelsCount ?? 0} kênh kết nối
+                  {workspace.unreadMessagesCount !== undefined ? ` · ${workspace.unreadMessagesCount} tin nhắn chưa đọc` : ''}
+                </Typography.Text>
               ) : null}
-            </div>
-            <Typography.Text type="secondary" className="mt-1 block text-sm">
-              /{workspace.slug}
-            </Typography.Text>
-          </div>
-        </button>
-
-        <Tag color={active ? 'green' : 'default'} bordered={false}>
-          {active ? 'Đang sử dụng' : 'Workspace'}
-        </Tag>
-      </div>
-
-      <div className="mt-4 flex items-center justify-between gap-3 border-t border-slate-100 pt-4">
-        <Typography.Text type="secondary" className="text-xs">
-          {workspace.settings ? 'Đã có cấu hình' : 'Chưa có cấu hình'}
-        </Typography.Text>
+              {recentWorkspaceId === workspace.id ? (
+                <Typography.Text className="workspace-picker__recent">Truy cập gần nhất</Typography.Text>
+              ) : null}
+            </Flex>
+            <ArrowRight size={15} className="workspace-picker__arrow shrink-0" aria-hidden="true" />
+          </Button>
+        </Col>
+      ))}
+      {showCreateTile ? (
+        <Col xs={24} sm={12}>
         <Button
-          icon={!active ? <ArrowRight size={14} /> : undefined}
-          disabled={active}
-          onClick={onSelect}
+          type="default"
+          block
+          className="workspace-picker__create-tile"
+          onClick={onCreateWorkspace}
         >
-          {active ? 'Đang chọn' : 'Chọn workspace'}
+          <Plus size={18} aria-hidden="true" />
+          <span>Tạo không gian làm việc mới</span>
         </Button>
-      </div>
-    </AppCard>
+        </Col>
+      ) : null}
+    </Row>
   )
 }

@@ -21,4 +21,7 @@ export interface TenantResponse {
   name: string
   slug: string
   settings: string
+  myRole?: TenantRole
+  channelsCount?: number
+  unreadMessagesCount?: number
 }

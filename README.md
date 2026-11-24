@@ -77,6 +77,10 @@ pnpm dev
 
 Ứng dụng chạy tại `http://localhost:3000`.
 
+## Luồng đăng nhập và workspace
+
+Sau khi đăng nhập, người dùng chọn workspace tại `/tenants`. Trang chọn workspace đứng ngoài layout quản trị. Chọn một workspace sẽ mở trang quản trị chung, còn các đường dẫn quản trị được điều hướng về bước chọn workspace nếu tab hiện tại chưa có lựa chọn.
+
 ## Source code validation
 
 Kiểm tra ranh giới kiến trúc:

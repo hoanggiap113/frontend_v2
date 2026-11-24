@@ -2,6 +2,16 @@ import type { Dispatch, SetStateAction } from 'react'
 import { Input, Modal, Typography } from 'antd'
 import { Building2, Plus } from '#/components/ui/icons'
 
+function toSlug(value: string) {
+  return value
+    .toLocaleLowerCase('vi')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/đ/g, 'd')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')
+}
+
 interface CreateWorkspaceModalProps {
   canSubmit: boolean
   form: { name: string; slug: string }
@@ -22,6 +32,7 @@ export function CreateWorkspaceModal({
   return (
     <Modal
       open
+      className="workspace-picker__modal"
       title={
         <span className="inline-flex items-center gap-2">
           <Building2 size={17} className="text-emerald-600" />
@@ -33,13 +44,12 @@ export function CreateWorkspaceModal({
       confirmLoading={submitting}
       okButtonProps={{ disabled: !canSubmit, icon: <Plus size={14} /> }}
       closable={!submitting}
-      maskClosable={!submitting}
+      mask={{ closable: !submitting }}
       onOk={onSubmit}
       onCancel={onClose}
     >
       <Typography.Paragraph type="secondary">
-        Workspace mới sẽ được chọn làm workspace hiện tại sau khi tạo thành
-        công.
+        Workspace mới sẽ xuất hiện trong danh sách để bạn chọn trước khi vào trang quản lý chung.
       </Typography.Paragraph>
 
       <div className="space-y-4">
@@ -52,10 +62,17 @@ export function CreateWorkspaceModal({
             value={form.name}
             placeholder="Ví dụ: Coffee Shop"
             onChange={(event) =>
-              onChange((current) => ({
-                ...current,
-                name: event.target.value,
-              }))
+              onChange((current) => {
+                const name = event.target.value
+                const oldAutoSlug = toSlug(current.name)
+                return {
+                  ...current,
+                  name,
+                  slug: !current.slug || current.slug === oldAutoSlug
+                    ? toSlug(name)
+                    : current.slug,
+                }
+              })
             }
             onPressEnter={() => {
               if (canSubmit && !submitting) onSubmit()

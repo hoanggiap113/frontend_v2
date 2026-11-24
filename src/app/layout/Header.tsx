@@ -3,12 +3,13 @@ import { useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { Avatar, Button, Dropdown, Input, Space, Tooltip, Typography } from 'antd'
 import type { MenuProps } from 'antd'
-import { Bell, LogOut, Menu, RefreshCw, Search, User } from '#/components/ui/icons'
-import { authService } from '#/lib/services/authService'
-import type { TenantResponse } from '#/lib/types/workspace'
+import { Bell, Building2, LogOut, Menu, RefreshCw, Search, User } from '#/components/ui/icons'
+import { useLogout } from '../hooks/useLogout'
+import { useCurrentTenant } from '../providers/TenantProvider'
+import { isMockMode } from '#/lib/config/env'
 
 interface HeaderProps {
-  currentTenant?: TenantResponse
+  currentTenant: { name: string } | null
   onToggleSidebar: () => void
   pageTitle: string
 }
@@ -20,22 +21,11 @@ export default function Header({
 }: HeaderProps) {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
-  const [loggingOut, setLoggingOut] = useState(false)
+  const { selectTenant } = useCurrentTenant()
+  const { loggingOut, logout } = useLogout()
+  const mockMode = isMockMode()
   const [refreshing, setRefreshing] = useState(false)
   const [search, setSearch] = useState('')
-
-  const handleLogout = async () => {
-    if (loggingOut) return
-
-    setLoggingOut(true)
-    try {
-      await authService.logout()
-    } finally {
-      queryClient.clear()
-      setLoggingOut(false)
-      navigate({ to: '/login' })
-    }
-  }
 
   const handleRefresh = async () => {
     if (refreshing) return
@@ -55,13 +45,23 @@ export default function Header({
       label: 'Tài khoản',
       disabled: true,
     },
+    {
+      key: 'workspaces',
+      icon: <Building2 size={16} />,
+      label: 'Đổi workspace',
+      onClick: () => {
+        selectTenant(null)
+        void navigate({ to: '/tenants', replace: true })
+      },
+    },
     { type: 'divider' },
     {
       key: 'logout',
       danger: true,
       icon: <LogOut size={16} />,
       label: loggingOut ? 'Đang đăng xuất...' : 'Đăng xuất',
-      onClick: handleLogout,
+      disabled: loggingOut,
+      onClick: logout,
     },
   ]
 
@@ -119,10 +119,10 @@ export default function Header({
           trigger={['click']}
         >
           <button type="button" className="app-header__account">
-            <Avatar className="app-header__avatar">U</Avatar>
+            <Avatar className="app-header__avatar">{mockMode ? 'A' : 'U'}</Avatar>
             <span className="app-header__account-copy">
-              <span>Tài khoản</span>
-              <small>Người dùng</small>
+              <span>{mockMode ? 'Admin Demo' : 'Tài khoản'}</span>
+              <small>{mockMode ? 'Quản trị viên' : 'Người dùng'}</small>
             </span>
           </button>
         </Dropdown>

@@ -15,6 +15,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as SetupRouteImport } from './routes/setup'
+import { Route as TenantsRouteImport } from './routes/tenants'
 import { Route as VerifyEmailRouteImport } from './routes/verify-email'
 import { Route as LayoutIndexRouteImport } from './routes/_layout/index'
 import { Route as LayoutActivityLogRouteImport } from './routes/_layout/activity-log'
@@ -26,7 +27,6 @@ import { Route as LayoutMessagesRouteImport } from './routes/_layout/messages'
 import { Route as LayoutNotiHistoryRouteImport } from './routes/_layout/noti-history'
 import { Route as LayoutSettingsRouteImport } from './routes/_layout/settings'
 import { Route as LayoutSystemLogRouteImport } from './routes/_layout/system-log'
-import { Route as LayoutTenantsRouteImport } from './routes/_layout/tenants'
 import { Route as LayoutUsersRouteImport } from './routes/_layout/users'
 import { Route as LayoutChannelsIndexRouteImport } from './routes/_layout/channels.index'
 import { Route as LayoutChannelsChannelIdRouteImport } from './routes/_layout/channels.$channelId'
@@ -63,6 +63,11 @@ const RegisterRoute = RegisterRouteImport.update({
 const SetupRoute = SetupRouteImport.update({
   id: '/setup',
   path: '/setup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TenantsRoute = TenantsRouteImport.update({
+  id: '/tenants',
+  path: '/tenants',
   getParentRoute: () => rootRouteImport,
 } as any)
 const VerifyEmailRoute = VerifyEmailRouteImport.update({
@@ -120,11 +125,6 @@ const LayoutSystemLogRoute = LayoutSystemLogRouteImport.update({
   path: '/system-log',
   getParentRoute: () => LayoutRoute,
 } as any)
-const LayoutTenantsRoute = LayoutTenantsRouteImport.update({
-  id: '/tenants',
-  path: '/tenants',
-  getParentRoute: () => LayoutRoute,
-} as any)
 const LayoutUsersRoute = LayoutUsersRouteImport.update({
   id: '/users',
   path: '/users',
@@ -173,6 +173,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/setup': typeof SetupRoute
+  '/tenants': typeof TenantsRoute
   '/verify-email': typeof VerifyEmailRoute
   '/activity-log': typeof LayoutActivityLogRoute
   '/ai-tasks': typeof LayoutAiTasksRoute
@@ -183,7 +184,6 @@ export interface FileRoutesByFullPath {
   '/noti-history': typeof LayoutNotiHistoryRoute
   '/settings': typeof LayoutSettingsRoute
   '/system-log': typeof LayoutSystemLogRoute
-  '/tenants': typeof LayoutTenantsRoute
   '/users': typeof LayoutUsersRoute
   '/channels/$channelId': typeof LayoutChannelsChannelIdRoute
   '/jobs/$jobId': typeof LayoutJobsJobIdRouteWithChildren
@@ -199,6 +199,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/setup': typeof SetupRoute
+  '/tenants': typeof TenantsRoute
   '/verify-email': typeof VerifyEmailRoute
   '/activity-log': typeof LayoutActivityLogRoute
   '/ai-tasks': typeof LayoutAiTasksRoute
@@ -209,7 +210,6 @@ export interface FileRoutesByTo {
   '/noti-history': typeof LayoutNotiHistoryRoute
   '/settings': typeof LayoutSettingsRoute
   '/system-log': typeof LayoutSystemLogRoute
-  '/tenants': typeof LayoutTenantsRoute
   '/users': typeof LayoutUsersRoute
   '/': typeof LayoutIndexRoute
   '/channels/$channelId': typeof LayoutChannelsChannelIdRoute
@@ -228,6 +228,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/setup': typeof SetupRoute
+  '/tenants': typeof TenantsRoute
   '/verify-email': typeof VerifyEmailRoute
   '/_layout/activity-log': typeof LayoutActivityLogRoute
   '/_layout/ai-tasks': typeof LayoutAiTasksRoute
@@ -238,7 +239,6 @@ export interface FileRoutesById {
   '/_layout/noti-history': typeof LayoutNotiHistoryRoute
   '/_layout/settings': typeof LayoutSettingsRoute
   '/_layout/system-log': typeof LayoutSystemLogRoute
-  '/_layout/tenants': typeof LayoutTenantsRoute
   '/_layout/users': typeof LayoutUsersRoute
   '/_layout/': typeof LayoutIndexRoute
   '/_layout/channels/$channelId': typeof LayoutChannelsChannelIdRoute
@@ -258,6 +258,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/setup'
+    | '/tenants'
     | '/verify-email'
     | '/activity-log'
     | '/ai-tasks'
@@ -268,7 +269,6 @@ export interface FileRouteTypes {
     | '/noti-history'
     | '/settings'
     | '/system-log'
-    | '/tenants'
     | '/users'
     | '/channels/$channelId'
     | '/jobs/$jobId'
@@ -284,6 +284,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/setup'
+    | '/tenants'
     | '/verify-email'
     | '/activity-log'
     | '/ai-tasks'
@@ -294,7 +295,6 @@ export interface FileRouteTypes {
     | '/noti-history'
     | '/settings'
     | '/system-log'
-    | '/tenants'
     | '/users'
     | '/'
     | '/channels/$channelId'
@@ -312,6 +312,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/setup'
+    | '/tenants'
     | '/verify-email'
     | '/_layout/activity-log'
     | '/_layout/ai-tasks'
@@ -322,7 +323,6 @@ export interface FileRouteTypes {
     | '/_layout/noti-history'
     | '/_layout/settings'
     | '/_layout/system-log'
-    | '/_layout/tenants'
     | '/_layout/users'
     | '/_layout/'
     | '/_layout/channels/$channelId'
@@ -341,6 +341,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
   SetupRoute: typeof SetupRoute
+  TenantsRoute: typeof TenantsRoute
   VerifyEmailRoute: typeof VerifyEmailRoute
   InvitationsTokenAcceptRoute: typeof InvitationsTokenAcceptRoute
 }
@@ -387,6 +388,13 @@ declare module '@tanstack/react-router' {
       path: '/setup'
       fullPath: '/setup'
       preLoaderRoute: typeof SetupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tenants': {
+      id: '/tenants'
+      path: '/tenants'
+      fullPath: '/tenants'
+      preLoaderRoute: typeof TenantsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/verify-email': {
@@ -464,13 +472,6 @@ declare module '@tanstack/react-router' {
       path: '/system-log'
       fullPath: '/system-log'
       preLoaderRoute: typeof LayoutSystemLogRouteImport
-      parentRoute: typeof LayoutRoute
-    }
-    '/_layout/tenants': {
-      id: '/_layout/tenants'
-      path: '/tenants'
-      fullPath: '/tenants'
-      preLoaderRoute: typeof LayoutTenantsRouteImport
       parentRoute: typeof LayoutRoute
     }
     '/_layout/users': {
@@ -554,7 +555,6 @@ interface LayoutRouteChildren {
   LayoutNotiHistoryRoute: typeof LayoutNotiHistoryRoute
   LayoutSettingsRoute: typeof LayoutSettingsRoute
   LayoutSystemLogRoute: typeof LayoutSystemLogRoute
-  LayoutTenantsRoute: typeof LayoutTenantsRoute
   LayoutUsersRoute: typeof LayoutUsersRoute
   LayoutIndexRoute: typeof LayoutIndexRoute
   LayoutChannelsChannelIdRoute: typeof LayoutChannelsChannelIdRoute
@@ -574,7 +574,6 @@ const LayoutRouteChildren: LayoutRouteChildren = {
   LayoutNotiHistoryRoute: LayoutNotiHistoryRoute,
   LayoutSettingsRoute: LayoutSettingsRoute,
   LayoutSystemLogRoute: LayoutSystemLogRoute,
-  LayoutTenantsRoute: LayoutTenantsRoute,
   LayoutUsersRoute: LayoutUsersRoute,
   LayoutIndexRoute: LayoutIndexRoute,
   LayoutChannelsChannelIdRoute: LayoutChannelsChannelIdRoute,
@@ -594,6 +593,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
   SetupRoute: SetupRoute,
+  TenantsRoute: TenantsRoute,
   VerifyEmailRoute: VerifyEmailRoute,
   InvitationsTokenAcceptRoute: InvitationsTokenAcceptRoute,
 }
